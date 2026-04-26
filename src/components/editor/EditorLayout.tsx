@@ -1,5 +1,7 @@
 import EditorHeader from './EditorHeader'
 import PageTabs from './PageTabs'
+import Toolbar from './Toolbar'
+import PropertiesPanel from './PropertiesPanel'
 import A4Canvas from '@/components/canvas/A4Canvas'
 
 interface EditorLayoutProps {
@@ -15,9 +17,7 @@ export default function EditorLayout({ onBack }: EditorLayoutProps) {
       {/* Three-panel body */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left: Toolbar */}
-        <div className="w-64 bg-white border-r flex-shrink-0 p-4 text-sm text-gray-400">
-          Toolbar
-        </div>
+        <Toolbar />
 
         {/* Center: PageTabs + Canvas */}
         <div className="flex-1 flex flex-col overflow-hidden">
@@ -26,9 +26,7 @@ export default function EditorLayout({ onBack }: EditorLayoutProps) {
         </div>
 
         {/* Right: Properties */}
-        <div className="w-72 bg-white border-l flex-shrink-0 p-4 text-sm text-gray-400">
-          Propiedades
-        </div>
+        <PropertiesPanel />
       </div>
     </div>
   )
