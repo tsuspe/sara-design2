@@ -1,5 +1,6 @@
 import EditorHeader from './EditorHeader'
 import PageTabs from './PageTabs'
+import A4Canvas from '@/components/canvas/A4Canvas'
 
 interface EditorLayoutProps {
   onBack: () => void
@@ -19,11 +20,9 @@ export default function EditorLayout({ onBack }: EditorLayoutProps) {
         </div>
 
         {/* Center: PageTabs + Canvas */}
-        <div className="flex-1 bg-gray-100 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <PageTabs />
-          <div className="flex-1 flex items-center justify-center text-gray-400">
-            Canvas
-          </div>
+          <A4Canvas />
         </div>
 
         {/* Right: Properties */}
