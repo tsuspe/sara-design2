@@ -2,7 +2,7 @@ import type { ImageElement } from '@/types'
 
 interface Props { element: ImageElement; isSelected: boolean }
 
-export default function ImageRenderer({ element, isSelected }: Props) {
+export default function ImageRenderer({ element, isSelected: _isSelected }: Props) {
   return (
     <div
       className="w-full h-full overflow-hidden"

@@ -13,7 +13,7 @@ export default function Page2Overlay({
   page,
   ficha,
   onUpdatePage,
-  onUpdateFicha,
+  onUpdateFicha: _onUpdateFicha,
   readOnly = false,
 }: Page2OverlayProps) {
   const colorInputRefs = useRef<(HTMLInputElement | null)[]>([])

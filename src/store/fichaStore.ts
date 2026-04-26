@@ -55,13 +55,13 @@ export const useFichaStore = create<FichaStore>((set) => ({
   updateCurrentPage: (changes) =>
     set((state) => {
       if (!state.currentFicha) return state
-      const pages = [...state.currentFicha.pages] as Ficha['pages']
+      const pages = [...state.currentFicha.pages] as FichaPage[]
       const current = pages[state.currentPageIndex]
-      pages[state.currentPageIndex] = { ...current, ...changes } as typeof current
+      pages[state.currentPageIndex] = { ...current, ...changes } as FichaPage
       return {
         currentFicha: {
           ...state.currentFicha,
-          pages,
+          pages: pages as Ficha['pages'],
           updatedAt: new Date().toISOString(),
         },
         isDirty: true,
@@ -73,16 +73,16 @@ export const useFichaStore = create<FichaStore>((set) => ({
   addElement: (element) =>
     set((state) => {
       if (!state.currentFicha) return state
-      const pages = [...state.currentFicha.pages] as Ficha['pages']
+      const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
       pages[state.currentPageIndex] = {
         ...page,
         elements: [...page.elements, element],
-      } as typeof page
+      } as FichaPage
       return {
         currentFicha: {
           ...state.currentFicha,
-          pages,
+          pages: pages as Ficha['pages'],
           updatedAt: new Date().toISOString(),
         },
         isDirty: true,
@@ -93,18 +93,18 @@ export const useFichaStore = create<FichaStore>((set) => ({
   updateElement: (id, changes) =>
     set((state) => {
       if (!state.currentFicha) return state
-      const pages = [...state.currentFicha.pages] as Ficha['pages']
+      const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
       pages[state.currentPageIndex] = {
         ...page,
         elements: page.elements.map((el) =>
           el.id === id ? ({ ...el, ...changes } as CanvasElement) : el
         ),
-      } as typeof page
+      } as FichaPage
       return {
         currentFicha: {
           ...state.currentFicha,
-          pages,
+          pages: pages as Ficha['pages'],
           updatedAt: new Date().toISOString(),
         },
         isDirty: true,
@@ -114,16 +114,16 @@ export const useFichaStore = create<FichaStore>((set) => ({
   removeElement: (id) =>
     set((state) => {
       if (!state.currentFicha) return state
-      const pages = [...state.currentFicha.pages] as Ficha['pages']
+      const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
       pages[state.currentPageIndex] = {
         ...page,
         elements: page.elements.filter((el) => el.id !== id),
-      } as typeof page
+      } as FichaPage
       return {
         currentFicha: {
           ...state.currentFicha,
-          pages,
+          pages: pages as Ficha['pages'],
           updatedAt: new Date().toISOString(),
         },
         isDirty: true,
@@ -135,7 +135,7 @@ export const useFichaStore = create<FichaStore>((set) => ({
   reorderElement: (id, direction) =>
     set((state) => {
       if (!state.currentFicha) return state
-      const pages = [...state.currentFicha.pages] as Ficha['pages']
+      const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
       const elements = [...page.elements]
       const idx = elements.findIndex((el) => el.id === id)
@@ -148,11 +148,11 @@ export const useFichaStore = create<FichaStore>((set) => ({
       pages[state.currentPageIndex] = {
         ...page,
         elements: reindexed,
-      } as typeof page
+      } as FichaPage
       return {
         currentFicha: {
           ...state.currentFicha,
-          pages,
+          pages: pages as Ficha['pages'],
           updatedAt: new Date().toISOString(),
         },
         isDirty: true,

@@ -6,7 +6,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
 
 interface FichaCardProps {
   ficha: Ficha
@@ -48,14 +47,10 @@ export default function FichaCard({ ficha, onOpen, onDelete }: FichaCardProps) {
           onClick={(e) => e.stopPropagation()}
         >
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 bg-white/80 hover:bg-white shadow-sm"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
+            <DropdownMenuTrigger
+              className="inline-flex items-center justify-center h-7 w-7 rounded-md bg-white/80 hover:bg-white shadow-sm text-gray-700"
+            >
+              <MoreVertical className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem

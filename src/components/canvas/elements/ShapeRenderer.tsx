@@ -2,7 +2,7 @@ import type { ShapeElement } from '@/types'
 
 interface Props { element: ShapeElement; isSelected: boolean }
 
-export default function ShapeRenderer({ element, isSelected }: Props) {
+export default function ShapeRenderer({ element, isSelected: _isSelected }: Props) {
   const { size, fill, stroke, strokeWidth, opacity, shape } = element
   return (
     <svg

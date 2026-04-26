@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useFichaStore } from './fichaStore'
-import { createDefaultFicha, createDefaultPage1 } from '@/utils/createDefaults'
+import { createDefaultFicha } from '@/utils/createDefaults'
 import type { TextElement } from '@/types'
 
 describe('fichaStore (Zustand)', () => {
@@ -47,7 +47,6 @@ describe('fichaStore (Zustand)', () => {
 
     it('should update updatedAt timestamp when field changes', () => {
       const ficha = createDefaultFicha()
-      const originalUpdatedAt = ficha.updatedAt
       useFichaStore.getState().setCurrentFicha(ficha)
 
       // Wait a small amount to ensure timestamp changes

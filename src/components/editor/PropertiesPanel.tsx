@@ -245,7 +245,7 @@ function ImageProps({ element, onUpdate }: { element: ImageElement; onUpdate: (c
         max={1}
         step={0.01}
         value={[element.opacity]}
-        onValueChange={([v]) => onUpdate({ opacity: v })}
+        onValueChange={(vals) => onUpdate({ opacity: Array.isArray(vals) ? (vals as number[])[0] : (vals as number) })}
       />
     </div>
   )
@@ -445,7 +445,7 @@ function ShapeProps({ element, onUpdate }: { element: ShapeElement; onUpdate: (c
           max={1}
           step={0.01}
           value={[element.opacity]}
-          onValueChange={([v]) => onUpdate({ opacity: v })}
+          onValueChange={(vals) => onUpdate({ opacity: Array.isArray(vals) ? (vals as number[])[0] : (vals as number) })}
         />
       </div>
     </>
