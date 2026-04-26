@@ -1,21 +1,19 @@
-import { Eye, ChevronLeft } from 'lucide-react'
+import { Eye, ChevronLeft, Save } from 'lucide-react'
 import { useFichaStore } from '@/store/fichaStore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 interface EditorHeaderProps {
   onBack: () => void
+  onPreview: () => void
+  onSave: () => void
 }
 
-export default function EditorHeader({ onBack }: EditorHeaderProps) {
+export default function EditorHeader({ onBack, onPreview, onSave }: EditorHeaderProps) {
   const { currentFicha, updateFichaField, isDirty } = useFichaStore()
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateFichaField({ title: e.target.value })
-  }
-
-  const handlePreview = () => {
-    console.log('Vista previa (placeholder)')
   }
 
   return (
@@ -35,9 +33,14 @@ export default function EditorHeader({ onBack }: EditorHeaderProps) {
         />
       </div>
 
-      {/* Right: preview button + save indicator */}
+      {/* Right: save button + preview button + save indicator */}
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={handlePreview} className="gap-1.5">
+        <Button variant="ghost" size="sm" onClick={onSave} className="gap-1.5" aria-label="Guardar">
+          <Save className="size-4" />
+          Guardar
+        </Button>
+
+        <Button variant="ghost" size="sm" onClick={onPreview} className="gap-1.5">
           <Eye className="size-4" />
           Vista previa
         </Button>

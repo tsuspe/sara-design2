@@ -20,5 +20,9 @@ export default function Editor() {
     navigate('/')
   }
 
-  return <EditorLayout onBack={handleBack} />
+  const handleSave = async () => {
+    await scheduleSave()
+  }
+
+  return <EditorLayout onBack={handleBack} onSave={handleSave} />
 }
