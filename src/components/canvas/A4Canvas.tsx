@@ -1,7 +1,9 @@
 import { useRef } from 'react'
 import { useFichaStore } from '@/store/fichaStore'
 import CanvasElementWrapper from './CanvasElementWrapper'
-import type { CanvasElement } from '@/types'
+import type { CanvasElement, FichaPage } from '@/types'
+import Page2Overlay from '@/components/pages/Page2Overlay'
+import Page3Overlay from '@/components/pages/Page3Overlay'
 
 interface Props {
   pageRef?: React.RefObject<HTMLDivElement | null>  // for html2canvas export
@@ -16,8 +18,15 @@ export default function A4Canvas({ pageRef }: Props) {
   const internalRef = useRef<HTMLDivElement>(null)
   const ref = pageRef ?? internalRef
 
-  const { currentFicha, currentPageIndex, updateElement, setSelectedElementId, selectedElementId } =
-    useFichaStore()
+  const {
+    currentFicha,
+    currentPageIndex,
+    updateElement,
+    setSelectedElementId,
+    selectedElementId,
+    updateCurrentPage,
+    updateFichaField,
+  } = useFichaStore()
 
   const page = currentFicha?.pages[currentPageIndex]
 
@@ -44,6 +53,23 @@ export default function A4Canvas({ pageRef }: Props) {
             margin: A4_MARGIN,
           }}
         />
+
+        {/* Page overlays (rendered below canvas elements so elements float on top) */}
+        {page.type === 'graphic' && (
+          <Page2Overlay
+            page={page}
+            ficha={currentFicha}
+            onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
+            onUpdateFicha={(changes) => updateFichaField(changes)}
+          />
+        )}
+        {page.type === 'technical' && (
+          <Page3Overlay
+            page={page}
+            ficha={currentFicha}
+            onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
+          />
+        )}
 
         {/* Render elements sorted by zIndex */}
         {[...page.elements]
