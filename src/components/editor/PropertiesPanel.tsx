@@ -2,12 +2,15 @@ import { useFichaStore } from '@/store/fichaStore'
 import type {
   CanvasElement,
   Ficha,
+  FichaPage,
   ImageElement,
   TextElement,
   LabelElement,
   ArrowElement,
   ShapeElement,
+  PatternPiece,
 } from '@/types'
+import PatternPiecesPanel from '@/components/editor/PatternPiecesPanel'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
@@ -504,8 +507,14 @@ function ElementProperties({ element, onUpdate }: ElementPropertiesProps) {
 // ─── PropertiesPanel (root export) ───────────────────────────────────────────
 
 export default function PropertiesPanel() {
-  const { currentFicha, selectedElementId, currentPageIndex, updateFichaField, updateElement } =
-    useFichaStore()
+  const {
+    currentFicha,
+    selectedElementId,
+    currentPageIndex,
+    updateFichaField,
+    updateElement,
+    updateCurrentPage,
+  } = useFichaStore()
 
   const page = currentFicha?.pages[currentPageIndex]
   const selectedElement = page?.elements.find((el) => el.id === selectedElementId) ?? null
@@ -519,6 +528,21 @@ export default function PropertiesPanel() {
           element={selectedElement}
           onUpdate={(changes) => updateElement(selectedElement.id, changes)}
         />
+      </div>
+    )
+  }
+
+  // Page 3: show PatternPiecesPanel above FichaMetadataForm
+  if (currentPageIndex === 2 && page?.type === 'technical') {
+    return (
+      <div className="w-72 bg-white border-l flex-shrink-0 overflow-y-auto">
+        <PatternPiecesPanel
+          page={page}
+          onUpdate={(pieces: PatternPiece[]) =>
+            updateCurrentPage({ patternPieces: pieces } as Partial<FichaPage>)
+          }
+        />
+        <FichaMetadataForm ficha={currentFicha} onUpdate={updateFichaField} />
       </div>
     )
   }
