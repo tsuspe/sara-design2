@@ -1,9 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from '@/components/ui/sonner'
-
-function Dashboard() {
-  return <div className="p-8 text-2xl">Dashboard (placeholder)</div>
-}
+import Dashboard from '@/pages/Dashboard'
 
 function Editor() {
   return <div className="p-8 text-2xl">Editor (placeholder)</div>
