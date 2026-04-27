@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useFichaStore } from '@/store/fichaStore'
 import CanvasElementWrapper from './CanvasElementWrapper'
 import type { CanvasElement, FichaPage } from '@/types'
+import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
 
@@ -37,13 +38,14 @@ export default function A4Canvas({ pageRef }: Props) {
   if (!page) return null
 
   return (
-    <div className="flex-1 bg-gray-100 flex items-center justify-center overflow-auto p-8">
-      {/* A4 page */}
+    {/* overflow-auto without flex centering — avoids CSS trap where top overflows are unreachable */}
+    <div className="flex-1 bg-gray-100 overflow-auto p-8">
+      {/* A4 page — centered horizontally via margin auto */}
       <div
         ref={ref}
         onClick={handleCanvasClick}
         className="relative bg-white shadow-lg"
-        style={{ width: A4_WIDTH, height: A4_HEIGHT, flexShrink: 0 }}
+        style={{ width: A4_WIDTH, height: A4_HEIGHT, flexShrink: 0, margin: '0 auto' }}
       >
         {/* Margin guides (dashed, only visible in editor — not captured by html2canvas if hidden during export) */}
         <div
@@ -55,6 +57,12 @@ export default function A4Canvas({ pageRef }: Props) {
         />
 
         {/* Page overlays (rendered below canvas elements so elements float on top) */}
+        {page.type === 'visual' && (
+          <Page1Overlay
+            ficha={currentFicha}
+            onUpdateFicha={(changes) => updateFichaField(changes)}
+          />
+        )}
         {page.type === 'graphic' && (
           <Page2Overlay
             page={page}
