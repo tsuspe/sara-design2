@@ -2,7 +2,7 @@ import type { ArrowElement } from '@/types'
 
 interface Props { element: ArrowElement; isSelected: boolean }
 
-export default function ArrowRenderer({ element, isSelected: _isSelected }: Props) {
+export default function ArrowRenderer({ element }: Props) {
   const { size, color, strokeWidth } = element
   return (
     <svg

@@ -6,7 +6,7 @@ interface Page1OverlayProps {
   readOnly?: boolean
 }
 
-export default function Page1Overlay({ ficha, readOnly: _readOnly = false }: Page1OverlayProps) {
+export default function Page1Overlay({ ficha }: Page1OverlayProps) {
   const formatDate = (iso: string) => {
     if (!iso) return '—'
     try { return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }

@@ -9,7 +9,7 @@ interface Page2OverlayProps {
   readOnly?: boolean
 }
 
-export default function Page2Overlay({ page, ficha, onUpdatePage, onUpdateFicha: _onUpdateFicha, readOnly = false }: Page2OverlayProps) {
+export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = false }: Page2OverlayProps) {
   const colorInputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   const formatDate = (iso: string) => {

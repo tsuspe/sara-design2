@@ -7,7 +7,7 @@ interface Page3OverlayProps {
   readOnly?: boolean
 }
 
-export default function Page3Overlay({ page, ficha, onUpdatePage: _onUpdatePage, readOnly: _readOnly = false }: Page3OverlayProps) {
+export default function Page3Overlay({ page, ficha }: Page3OverlayProps) {
   const formatDate = (iso: string) => {
     if (!iso) return '—'
     try { return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }
