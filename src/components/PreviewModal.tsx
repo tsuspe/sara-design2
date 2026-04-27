@@ -6,6 +6,7 @@ import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { useFichaStore } from '@/store/fichaStore'
 import PageRenderer from '@/components/canvas/PageRenderer'
+import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
 import { A4_WIDTH, A4_HEIGHT } from '@/components/canvas/A4Canvas'
@@ -16,11 +17,12 @@ interface PreviewModalProps {
   onClose: () => void
 }
 
-const PREVIEW_SCALE = 0.6
+// Fits a single A4 page in ~680px dialog width
+const PREVIEW_SCALE = 0.75
 
 export default function PreviewModal({ open, onClose }: PreviewModalProps) {
   const { currentFicha } = useFichaStore()
-  // Refs to the inner (1x) unscaled divs for html2canvas capture
+  // Refs to inner 1x unscaled divs for html2canvas export
   const innerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null])
 
   if (!currentFicha) return null
@@ -42,41 +44,52 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
     doc.save(`${currentFicha.title || 'ficha'}-${Date.now()}.pdf`)
   }
 
-  const handlePrint = () => {
-    window.print()
-  }
-
   const pages = currentFicha.pages
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        className="overflow-y-auto"
+        style={{
+          maxWidth: A4_WIDTH * PREVIEW_SCALE + 80,
+          width: '95vw',
+          maxHeight: '92vh',
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Vista previa — {currentFicha.title}</DialogTitle>
         </DialogHeader>
-        <div className="flex gap-4 justify-center flex-wrap py-4">
+
+        {/* Pages stacked vertically — no horizontal scroll needed */}
+        <div className="flex flex-col items-center gap-6 py-2">
           {pages.map((page: FichaPage, i: number) => (
-            <div key={i} className="flex flex-col items-center gap-2">
-              <span className="text-xs text-gray-500">Página {i + 1}</span>
+            <div key={i} className="flex flex-col items-center gap-1 w-full">
+              <span className="text-xs text-gray-400 font-medium self-start">Página {i + 1}</span>
+              {/* Clipping wrapper at scaled dimensions */}
               <div
-                className="relative bg-white shadow border overflow-hidden"
+                className="relative bg-white shadow border border-gray-200 overflow-hidden"
                 style={{
                   width: A4_WIDTH * PREVIEW_SCALE,
                   height: A4_HEIGHT * PREVIEW_SCALE,
                   flexShrink: 0,
                 }}
               >
+                {/* Inner 1x div — CSS scaled for display, ref used for html2canvas */}
                 <div
                   ref={(el) => { innerRefs.current[i] = el }}
+                  className="relative bg-white"
                   style={{
-                    transform: `scale(${PREVIEW_SCALE})`,
-                    transformOrigin: 'top left',
                     width: A4_WIDTH,
                     height: A4_HEIGHT,
+                    transform: `scale(${PREVIEW_SCALE})`,
+                    transformOrigin: 'top left',
+                    pointerEvents: 'none',
                   }}
-                  className="relative bg-white"
                 >
-                  {/* Page-specific static overlays */}
+                  {/* Same overlays as editor */}
+                  {page.type === 'visual' && (
+                    <Page1Overlay ficha={currentFicha} readOnly />
+                  )}
                   {page.type === 'graphic' && (
                     <Page2Overlay
                       page={page}
@@ -94,7 +107,6 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
                       readOnly
                     />
                   )}
-                  {/* Canvas elements */}
                   <PageRenderer
                     page={page}
                     showAnnotations={page.type === 'visual' ? page.showAnnotations : true}
@@ -104,8 +116,9 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
             </div>
           ))}
         </div>
-        <div className="flex justify-end gap-2 pt-2 border-t">
-          <Button variant="outline" onClick={handlePrint}>
+
+        <div className="flex justify-end gap-2 pt-3 border-t bg-white sticky bottom-0 pb-1">
+          <Button variant="outline" onClick={() => window.print()}>
             <Printer className="w-4 h-4 mr-2" /> Imprimir
           </Button>
           <Button onClick={handleExport}>
