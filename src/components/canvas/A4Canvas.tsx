@@ -38,7 +38,6 @@ export default function A4Canvas({ pageRef }: Props) {
   if (!page) return null
 
   return (
-    {/* overflow-auto without flex centering — avoids CSS trap where top overflows are unreachable */}
     <div className="flex-1 bg-gray-100 overflow-auto p-8">
       {/* A4 page — centered horizontally via margin auto */}
       <div
