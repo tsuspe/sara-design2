@@ -9,6 +9,7 @@ import type {
   ArrowElement,
   ShapeElement,
   PatternPiece,
+  Measurement,
 } from '@/types'
 import PatternPiecesPanel from '@/components/editor/PatternPiecesPanel'
 import { Input } from '@/components/ui/input'
@@ -41,6 +42,24 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
         Datos de la ficha
       </p>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Diseñadora</Label>
+        <Input
+          value={ficha.designerName}
+          onChange={(e) => onUpdate({ designerName: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Marca</Label>
+        <Input
+          value={ficha.brand}
+          onChange={(e) => onUpdate({ brand: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Nº Ficha</Label>
@@ -127,6 +146,61 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
           <option value="true">Aprobado</option>
           <option value="false">Rechazado</option>
         </select>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Temporada / Season</Label>
+        <Input
+          value={ficha.season}
+          onChange={(e) => onUpdate({ season: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Tela / Material</Label>
+        <Input
+          value={ficha.fabric}
+          onChange={(e) => onUpdate({ fabric: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Talla Base</Label>
+        <Input
+          value={ficha.size}
+          onChange={(e) => onUpdate({ size: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Artículo / Código</Label>
+        <Input
+          value={ficha.article}
+          onChange={(e) => onUpdate({ article: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Línea / Colección</Label>
+        <Input
+          value={ficha.line}
+          onChange={(e) => onUpdate({ line: e.target.value })}
+          className="h-7 text-sm"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Descripción</Label>
+        <textarea
+          value={ficha.description}
+          onChange={(e) => onUpdate({ description: e.target.value })}
+          rows={2}
+          className="text-sm border rounded px-2 py-1 resize-none"
+        />
       </div>
 
       <div className="flex flex-col gap-1">
@@ -538,8 +612,11 @@ export default function PropertiesPanel() {
       <div className="w-72 bg-white border-l flex-shrink-0 overflow-y-auto">
         <PatternPiecesPanel
           page={page}
-          onUpdate={(pieces: PatternPiece[]) =>
+          onUpdatePieces={(pieces: PatternPiece[]) =>
             updateCurrentPage({ patternPieces: pieces } as Partial<FichaPage>)
+          }
+          onUpdateMeasurements={(measurements: Measurement[]) =>
+            updateCurrentPage({ measurements } as Partial<FichaPage>)
           }
         />
         <FichaMetadataForm ficha={currentFicha} onUpdate={updateFichaField} />

@@ -69,7 +69,7 @@ export default function CanvasElementWrapper({
       onResizeStop={handleResizeStop}
       onMouseDown={onSelect}
       style={{
-        zIndex,
+        zIndex: zIndex + 100,
         transform: `rotate(${rotation}deg)`,
         outline: isSelected ? '2px solid #3b82f6' : 'none',
         outlineOffset: '1px',

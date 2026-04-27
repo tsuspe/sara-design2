@@ -59,6 +59,14 @@ export type CanvasElement =
   | ArrowElement
   | ShapeElement
 
+// ─── Measurements ─────────────────────────────────────────────────────────────
+
+export interface Measurement {
+  id: string
+  label: string  // e.g. "Talla", "Busto", "Cintura", "Cadera", "Largo total"
+  value: string  // e.g. "M", "92cm", "76cm"
+}
+
 // ─── Pattern Pieces ───────────────────────────────────────────────────────────
 
 export interface PatternPiece {
@@ -90,6 +98,7 @@ export interface Page3Technical {
   elements: CanvasElement[]
   garmentThumbnailData?: string  // base64 PNG uploaded via click zone
   patternPieces: PatternPiece[]
+  measurements: Measurement[]
 }
 
 export type FichaPage = Page1Visual | Page2Graphic | Page3Technical
@@ -108,6 +117,14 @@ export interface Ficha {
   tallerName: string
   approvedPrototype: boolean | null
   modifications: string
+  designerName: string
+  brand: string
+  season: string
+  fabric: string       // material / tela base
+  size: string         // talla base
+  description: string  // descripción del artículo
+  article: string      // artículo / código
+  line: string         // línea / colección
   pages: [Page1Visual, Page2Graphic, Page3Technical]
   createdAt: string      // ISO datetime string
   updatedAt: string      // ISO datetime string

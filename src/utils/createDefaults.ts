@@ -24,6 +24,13 @@ export function createDefaultPage3(): Page3Technical {
     elements: [],
     garmentThumbnailData: undefined,
     patternPieces: [],
+    measurements: [
+      { id: uuidv4(), label: 'Talla', value: '' },
+      { id: uuidv4(), label: 'Busto', value: '' },
+      { id: uuidv4(), label: 'Cintura', value: '' },
+      { id: uuidv4(), label: 'Cadera', value: '' },
+      { id: uuidv4(), label: 'Largo total', value: '' },
+    ],
   }
 }
 
@@ -41,6 +48,14 @@ export function createDefaultFicha(): Ficha {
     tallerName: '',
     approvedPrototype: null,
     modifications: '',
+    designerName: '',
+    brand: '',
+    season: '',
+    fabric: '',
+    size: '',
+    description: '',
+    article: '',
+    line: '',
     pages: [createDefaultPage1(), createDefaultPage2(), createDefaultPage3()],
     createdAt: now,
     updatedAt: now,
