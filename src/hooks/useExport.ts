@@ -1,6 +1,7 @@
 import { useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import { applyHtml2CanvasSafeStyles } from '@/utils/html2canvasSafe'
 
 export function useExport() {
   const pageRefs = useRef<(HTMLDivElement | null)[]>([null, null, null])
@@ -13,6 +14,8 @@ export function useExport() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
+      foreignObjectRendering: true,
+      onclone: applyHtml2CanvasSafeStyles,
     })
     return canvas.toDataURL('image/png')
   }, [])
@@ -36,9 +39,15 @@ export function useExport() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
+      foreignObjectRendering: true,
+      onclone: applyHtml2CanvasSafeStyles,
     })
     return canvas.toDataURL('image/png')
   }, [])
 
-  return { pageRefs, exportPDF, generateThumbnail, capturePage }
+  const setPageRef = useCallback((index: 0 | 1 | 2, el: HTMLDivElement | null) => {
+    pageRefs.current[index] = el
+  }, [])
+
+  return { pageRefs, setPageRef, exportPDF, generateThumbnail, capturePage }
 }

@@ -35,7 +35,7 @@ export default function FichaCard({ ficha, onOpen, onDelete }: FichaCardProps) {
           <img
             src={ficha.thumbnailData}
             alt={ficha.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain bg-white"
           />
         ) : (
           <Scissors className="w-10 h-10 text-gray-300" />

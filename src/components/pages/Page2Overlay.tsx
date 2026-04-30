@@ -63,6 +63,10 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
                 cursor: readOnly ? 'default' : 'text',
                 pointerEvents: readOnly ? 'none' : 'auto',
                 minWidth: 80,
+                fontFamily: ficha.titleFontFamily ?? 'Arial, sans-serif',
+                fontSize: ficha.titleFontSize ?? 24,
+                fontWeight: ficha.titleFontWeight ?? 'bold',
+                fontStyle: ficha.titleFontStyle ?? 'normal',
               }}
             >
               {page.pageTitle || ficha.modelName || 'MODELO'}
@@ -77,7 +81,7 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
         </div>
 
         {/* Data grid: same as Page1 */}
-        <div className="flex text-[10px]" style={{ height: 66 }}>
+        <div className="flex text-[10px]" style={{ height: 66, fontFamily: ficha.bodyFontFamily ?? 'Arial, sans-serif' }}>
           <div className="flex flex-col flex-1 border-r border-gray-200">
             <DataCell label="Brand" value={ficha.brand} />
             <DataCell label="Season" value={ficha.season} />

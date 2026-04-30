@@ -1,6 +1,8 @@
 import { useFichaStore } from '@/store/fichaStore'
+import { v4 as uuidv4 } from 'uuid'
 import type {
   CanvasElement,
+  CustomFont,
   Ficha,
   FichaPage,
   ImageElement,
@@ -15,6 +17,63 @@ import PatternPiecesPanel from '@/components/editor/PatternPiecesPanel'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
+
+const FONT_OPTIONS = [
+  { label: 'Arial', value: 'Arial, sans-serif' },
+  { label: 'Helvetica', value: 'Helvetica, Arial, sans-serif' },
+  { label: 'Geist', value: 'Geist, Arial, sans-serif' },
+  { label: 'Times', value: '"Times New Roman", serif' },
+  { label: 'Georgia', value: 'Georgia, serif' },
+  { label: 'Garamond', value: 'Garamond, Georgia, serif' },
+  { label: 'Verdana', value: 'Verdana, sans-serif' },
+  { label: 'Courier', value: '"Courier New", monospace' },
+  { label: 'Impact', value: 'Impact, sans-serif' },
+]
+
+function fontFormatFromName(name: string): CustomFont['format'] {
+  const ext = name.split('.').pop()?.toLowerCase()
+  if (ext === 'otf') return 'opentype'
+  if (ext === 'woff') return 'woff'
+  if (ext === 'woff2') return 'woff2'
+  return 'truetype'
+}
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(file)
+  })
+}
+
+function FontSelect({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (value: string) => void
+}) {
+  const customFonts = useFichaStore((state) => state.currentFicha?.customFonts ?? [])
+  const allOptions = [
+    ...FONT_OPTIONS,
+    ...customFonts.map((font) => ({ label: font.name, value: `"${font.family}", sans-serif` })),
+  ]
+
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="h-7 text-sm border rounded px-2 bg-white"
+    >
+      {allOptions.map((font) => (
+        <option key={font.value} value={font.value}>
+          {font.label}
+        </option>
+      ))}
+    </select>
+  )
+}
 
 // ─── Ficha Metadata Form ──────────────────────────────────────────────────────
 
@@ -35,6 +94,23 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
     const mapped =
       value === 'null' ? null : value === 'true' ? true : false
     onUpdate({ approvedPrototype: mapped })
+  }
+
+  const handleFontUpload = async (file: File) => {
+    const dataUrl = await fileToDataUrl(file)
+    const name = file.name.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/, '')
+    const font: CustomFont = {
+      id: uuidv4(),
+      name,
+      family: `SaraCustom-${uuidv4()}`,
+      dataUrl,
+      format: fontFormatFromName(file.name),
+    }
+    onUpdate({ customFonts: [...(ficha.customFonts ?? []), font] })
+  }
+
+  const handleRemoveFont = (id: string) => {
+    onUpdate({ customFonts: (ficha.customFonts ?? []).filter((font) => font.id !== id) })
   }
 
   return (
@@ -176,6 +252,94 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
           className="text-sm border rounded px-2 py-1 resize-none"
         />
       </div>
+
+      <hr />
+
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        Tipografía de plantilla
+      </p>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Fuente títulos</Label>
+        <FontSelect
+          value={ficha.titleFontFamily ?? 'Arial, sans-serif'}
+          onChange={(titleFontFamily) => onUpdate({ titleFontFamily })}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label className="text-xs">Tipografías personalizadas</Label>
+        <Input
+          type="file"
+          accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) void handleFontUpload(file)
+            e.target.value = ''
+          }}
+          className="h-8 text-xs"
+        />
+        {(ficha.customFonts ?? []).length > 0 && (
+          <div className="flex flex-col gap-1">
+            {(ficha.customFonts ?? []).map((font) => (
+              <div key={font.id} className="flex items-center justify-between gap-2 rounded border px-2 py-1">
+                <span className="text-xs truncate" style={{ fontFamily: `"${font.family}", sans-serif` }}>
+                  {font.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveFont(font.id)}
+                  className="text-xs text-red-500 hover:text-red-700"
+                >
+                  Quitar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col gap-1">
+          <Label className="text-xs">Tamaño título</Label>
+          <Input
+            type="number"
+            min={12}
+            max={48}
+            value={ficha.titleFontSize ?? 24}
+            onChange={(e) => onUpdate({ titleFontSize: Number(e.target.value) })}
+            className="h-7 text-sm"
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <Label className="text-xs">Fuente datos</Label>
+          <FontSelect
+            value={ficha.bodyFontFamily ?? 'Arial, sans-serif'}
+            onChange={(bodyFontFamily) => onUpdate({ bodyFontFamily })}
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <label className="flex items-center gap-1 cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={(ficha.titleFontWeight ?? 'bold') === 'bold'}
+            onChange={(e) => onUpdate({ titleFontWeight: e.target.checked ? 'bold' : 'normal' })}
+            className="rounded"
+          />
+          Título negrita
+        </label>
+        <label className="flex items-center gap-1 cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={(ficha.titleFontStyle ?? 'normal') === 'italic'}
+            onChange={(e) => onUpdate({ titleFontStyle: e.target.checked ? 'italic' : 'normal' })}
+            className="rounded"
+          />
+          Título cursiva
+        </label>
+      </div>
     </div>
   )
 }
@@ -293,6 +457,14 @@ function TextProps({ element, onUpdate }: { element: TextElement; onUpdate: (c: 
   return (
     <>
       <div className="flex flex-col gap-1">
+        <Label className="text-xs">Fuente</Label>
+        <FontSelect
+          value={element.fontFamily}
+          onChange={(fontFamily) => onUpdate({ fontFamily })}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
         <Label className="text-xs">Tamaño de fuente</Label>
         <Input
           type="number"
@@ -366,6 +538,14 @@ function LabelProps({ element, onUpdate }: { element: LabelElement; onUpdate: (c
       </div>
 
       <div className="flex flex-col gap-1">
+        <Label className="text-xs">Fuente</Label>
+        <FontSelect
+          value={element.fontFamily ?? 'Arial, sans-serif'}
+          onChange={(fontFamily) => onUpdate({ fontFamily })}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
         <Label className="text-xs">Tamaño de fuente</Label>
         <Input
           type="number"
@@ -375,6 +555,42 @@ function LabelProps({ element, onUpdate }: { element: LabelElement; onUpdate: (c
           onChange={(e) => onUpdate({ fontSize: Number(e.target.value) })}
           className="h-7 text-sm"
         />
+      </div>
+
+      <div className="flex gap-3">
+        <label className="flex items-center gap-1 cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={(element.fontWeight ?? 'normal') === 'bold'}
+            onChange={(e) => onUpdate({ fontWeight: e.target.checked ? 'bold' : 'normal' })}
+            className="rounded"
+          />
+          Negrita
+        </label>
+        <label className="flex items-center gap-1 cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={(element.fontStyle ?? 'normal') === 'italic'}
+            onChange={(e) => onUpdate({ fontStyle: e.target.checked ? 'italic' : 'normal' })}
+            className="rounded"
+          />
+          Cursiva
+        </label>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <Label className="text-xs">Alineación</Label>
+        <div className="flex gap-1">
+          {(['left', 'center', 'right'] as const).map((align) => (
+            <button
+              key={align}
+              onClick={() => onUpdate({ align })}
+              className={`flex-1 py-1 text-xs border rounded ${(element.align ?? 'left') === align ? 'bg-gray-200 font-semibold' : 'bg-white'}`}
+            >
+              {align === 'left' ? 'Izq' : align === 'center' ? 'Cen' : 'Der'}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1">

@@ -8,47 +8,106 @@ interface Page1OverlayProps {
 
 export default function Page1Overlay({ ficha }: Page1OverlayProps) {
   const formatDate = (iso: string) => {
-    if (!iso) return '—'
-    try { return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }
-    catch { return iso }
+    if (!iso) return new Date().getFullYear().toString()
+    try {
+      return new Date(iso).toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    } catch {
+      return iso
+    }
   }
+
+  const titleFont = ficha.titleFontFamily ?? 'Impact, sans-serif'
+  const bodyFont = ficha.bodyFontFamily ?? 'Arial, sans-serif'
+  const title = ficha.modelName || ficha.title || 'MODELO'
+  const footer = ficha.brand || ficha.designerName || 'SARA DESIGN'
 
   return (
     <>
-      {/* TOP HEADER: 116px */}
       <div
-        className="absolute left-0 right-0 top-0 border-b-2 border-gray-900 pointer-events-none bg-white"
-        style={{ height: 116, zIndex: 20 }}
+        className="absolute pointer-events-none"
+        style={{ inset: 12, border: '4px solid #111827', zIndex: 10 }}
+      />
+
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: 52,
+          right: 52,
+          top: 178,
+          bottom: 74,
+          zIndex: 1,
+          border: '3px solid #111827',
+          backgroundColor: '#ffffff',
+          backgroundImage:
+            'linear-gradient(rgba(173,216,230,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(173,216,230,0.45) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+        }}
+      />
+
+      <div
+        className="absolute left-[52px] right-[52px] pointer-events-none bg-white text-center"
+        style={{
+          top: 158,
+          height: 20,
+          zIndex: 21,
+          borderLeft: '3px solid #111827',
+          borderRight: '3px solid #111827',
+          borderTop: '3px solid #111827',
+          fontFamily: bodyFont,
+          fontSize: 12,
+          fontWeight: 900,
+          letterSpacing: 0.6,
+          lineHeight: '17px',
+        }}
       >
-        {/* Title row: 50px */}
-        <div className="flex border-b border-gray-900" style={{ height: 50 }}>
-          <div
-            className="flex items-center justify-center px-4 bg-gray-900 text-white font-bold text-sm uppercase tracking-wider"
-            style={{ minWidth: 120 }}
+        DETAIL AFTER PURCHASE
+      </div>
+
+      <div
+        className="absolute pointer-events-none bg-white"
+        style={{
+          left: 40,
+          right: 40,
+          top: 40,
+          height: 118,
+          zIndex: 20,
+          border: '3px solid #111827',
+        }}
+      >
+        <div
+          className="flex items-center px-4 overflow-hidden"
+          style={{ height: 45, borderBottom: '3px solid #111827' }}
+        >
+          <span
+            className="uppercase truncate"
+            style={{
+              fontFamily: titleFont,
+              fontSize: ficha.titleFontSize ?? 46,
+              fontWeight: ficha.titleFontWeight ?? 'bold',
+              fontStyle: ficha.titleFontStyle ?? 'normal',
+              color: '#25385c',
+              letterSpacing: 1,
+              lineHeight: '42px',
+            }}
           >
-            {ficha.brand || 'MARCA'}
-          </div>
-          <div className="flex-1 flex items-center px-4 gap-4">
-            <span className="text-2xl font-bold tracking-wide uppercase text-gray-900 truncate">
-              {ficha.modelName || ficha.title || 'MODELO'}
-            </span>
-          </div>
-          <div className="flex items-center justify-center px-4 border-l border-gray-300 text-[10px] text-center">
-            <div>
-              <div className="text-gray-400 text-[8px] uppercase tracking-wide">Hoja Nº</div>
-              <div className="font-bold text-gray-900">{ficha.fichaNumber || '01'}</div>
-            </div>
-          </div>
+            {title}
+          </span>
         </div>
 
-        {/* Data grid: 3 cols × 3 rows, 66px total */}
-        <div className="flex text-[10px]" style={{ height: 66 }}>
-          <div className="flex flex-col flex-1 border-r border-gray-200">
+        <div
+          className="flex text-[12px] font-bold"
+          style={{ height: 73, fontFamily: bodyFont }}
+        >
+          <div className="flex flex-col flex-1" style={{ borderRight: '3px solid #111827' }}>
             <DataCell label="Brand" value={ficha.brand} />
             <DataCell label="Season" value={ficha.season} />
             <DataCell label="Line" value={ficha.line} />
           </div>
-          <div className="flex flex-col flex-1 border-r border-gray-200">
+          <div className="flex flex-col flex-1" style={{ borderRight: '3px solid #111827' }}>
             <DataCell label="Model" value={ficha.modelName} />
             <DataCell label="Article" value={ficha.article} />
             <DataCell label="Size" value={ficha.size} />
@@ -61,13 +120,31 @@ export default function Page1Overlay({ ficha }: Page1OverlayProps) {
         </div>
       </div>
 
-      {/* BOTTOM STRIP: 50px (black brand bar) */}
       <div
-        className="absolute left-0 right-0 bottom-0 bg-gray-900 text-white pointer-events-none flex items-center justify-between px-6"
-        style={{ height: 50, zIndex: 20 }}
+        className="absolute pointer-events-none flex items-center justify-center bg-white"
+        style={{
+          left: 52,
+          right: 52,
+          bottom: 22,
+          height: 50,
+          zIndex: 20,
+          borderLeft: '3px solid #111827',
+          borderRight: '3px solid #111827',
+          borderBottom: '3px solid #111827',
+        }}
       >
-        <span className="text-base font-black tracking-widest uppercase">{ficha.brand || 'MARCA'}</span>
-        <span className="text-xs text-gray-400 uppercase tracking-wide">{ficha.designerName}</span>
+        <span
+          className="uppercase truncate"
+          style={{
+            fontFamily: titleFont,
+            fontSize: 34,
+            fontWeight: 900,
+            letterSpacing: 2,
+            color: '#25385c',
+          }}
+        >
+          {footer}
+        </span>
       </div>
     </>
   )
@@ -75,9 +152,12 @@ export default function Page1Overlay({ ficha }: Page1OverlayProps) {
 
 function DataCell({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center gap-1 px-3 border-b border-gray-100 flex-1 min-h-0">
-      <span className="text-gray-400 font-medium shrink-0 w-[78px]">{label}:</span>
-      <span className="text-gray-900 truncate">{value || '—'}</span>
+    <div
+      className="flex items-center gap-1 px-2 flex-1 min-h-0"
+      style={{ borderBottom: '3px solid #111827' }}
+    >
+      <span className="text-gray-900 font-black shrink-0">{label} :</span>
+      <span className="text-gray-900 truncate">{value || 'None'}</span>
     </div>
   )
 }

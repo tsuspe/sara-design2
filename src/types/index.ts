@@ -33,6 +33,10 @@ export interface LabelElement extends BaseCanvasElement {
   type: 'label'
   content: string
   fontSize: number
+  fontFamily?: string
+  fontWeight?: 'normal' | 'bold'
+  fontStyle?: 'normal' | 'italic'
+  align?: 'left' | 'center' | 'right'
   color: string
   backgroundColor: string
 }
@@ -59,6 +63,14 @@ export type CanvasElement =
   | LabelElement
   | ArrowElement
   | ShapeElement
+
+export interface CustomFont {
+  id: string
+  name: string
+  family: string
+  dataUrl: string
+  format: 'truetype' | 'opentype' | 'woff' | 'woff2'
+}
 
 // ─── Measurements ─────────────────────────────────────────────────────────────
 
@@ -126,6 +138,12 @@ export interface Ficha {
   description: string  // descripción del artículo
   article: string      // artículo / código
   line: string         // línea / colección
+  titleFontFamily?: string
+  titleFontSize?: number
+  titleFontWeight?: 'normal' | 'bold'
+  titleFontStyle?: 'normal' | 'italic'
+  bodyFontFamily?: string
+  customFonts?: CustomFont[]
   pages: [Page1Visual, Page2Graphic, Page3Technical]
   createdAt: string      // ISO datetime string
   updatedAt: string      // ISO datetime string

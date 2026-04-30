@@ -11,6 +11,8 @@ import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
 import { A4_WIDTH, A4_HEIGHT } from '@/components/canvas/A4Canvas'
 import type { FichaPage } from '@/types'
+import { applyHtml2CanvasSafeStyles } from '@/utils/html2canvasSafe'
+import CustomFontStyles from '@/components/CustomFontStyles'
 
 interface PreviewModalProps {
   open: boolean
@@ -38,6 +40,8 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
+        foreignObjectRendering: true,
+        onclone: applyHtml2CanvasSafeStyles,
       })
       doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297)
     }
@@ -56,6 +60,7 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
           maxHeight: '92vh',
         }}
       >
+        <CustomFontStyles fonts={currentFicha.customFonts} />
         <DialogHeader>
           <DialogTitle>Vista previa — {currentFicha.title}</DialogTitle>
         </DialogHeader>
@@ -78,6 +83,7 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
                 <div
                   ref={(el) => { innerRefs.current[i] = el }}
                   className="relative bg-white"
+                  data-html2canvas-safe
                   style={{
                     width: A4_WIDTH,
                     height: A4_HEIGHT,

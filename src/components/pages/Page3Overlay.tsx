@@ -31,9 +31,17 @@ export default function Page3Overlay({ page, ficha }: Page3OverlayProps) {
         {/* Title bar: 26px */}
         <div
           className="flex items-center justify-between px-4 bg-gray-900 text-white"
-          style={{ height: 26 }}
+          style={{ height: 26, fontFamily: ficha.titleFontFamily ?? 'Arial, sans-serif' }}
         >
-          <span className="text-[11px] font-bold uppercase tracking-widest">Ficha de Despiece de Moldería</span>
+          <span
+            className="text-[11px] font-bold uppercase tracking-widest"
+            style={{
+              fontWeight: ficha.titleFontWeight ?? 'bold',
+              fontStyle: ficha.titleFontStyle ?? 'normal',
+            }}
+          >
+            Ficha de Despiece de Moldería
+          </span>
           <span className="text-[10px] text-gray-300">Hoja Nº: {ficha.fichaNumber || '—'}</span>
         </div>
 
@@ -47,7 +55,7 @@ export default function Page3Overlay({ page, ficha }: Page3OverlayProps) {
             {ficha.brand || 'MARCA'}
           </div>
           {/* 2-column grid */}
-          <div className="flex flex-1 text-[10px]">
+          <div className="flex flex-1 text-[10px]" style={{ fontFamily: ficha.bodyFontFamily ?? 'Arial, sans-serif' }}>
             <div className="flex flex-col flex-1 border-r border-gray-300">
               <HCell label="EMPRESA" value={ficha.brand} />
               <HCell label="MARCA" value={ficha.brand} />

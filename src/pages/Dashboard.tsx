@@ -1,23 +1,54 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Ficha } from '@/types'
-import { getAllFichas, deleteFicha } from '@/db/indexedDB'
+import { getAllFichas, deleteFicha, saveFicha } from '@/db/indexedDB'
 import FichaCard from '@/components/FichaCard'
 import NewFichaModal from '@/components/NewFichaModal'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { generateFichaThumbnailDataUrl } from '@/utils/thumbnail'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const [fichas, setFichas] = useState<Ficha[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
+  const generatedRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
     getAllFichas()
       .then(setFichas)
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => {
+    if (loading) return
+    const missing = fichas.filter((ficha) => !ficha.thumbnailData && !generatedRef.current.has(ficha.id))
+    if (missing.length === 0) return
+
+    let cancelled = false
+    const timer = window.setTimeout(async () => {
+      for (const ficha of missing) {
+        if (cancelled) return
+        generatedRef.current.add(ficha.id)
+        try {
+          const thumbnailData = generateFichaThumbnailDataUrl(ficha)
+          const updated = { ...ficha, thumbnailData }
+          await saveFicha(updated)
+          setFichas((prev) =>
+            prev.map((item) => (item.id === ficha.id ? { ...item, thumbnailData } : item))
+          )
+        } catch (err) {
+          console.warn('Dashboard thumbnail generation skipped:', err)
+        }
+      }
+    }, 100)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [fichas, loading])
 
   function handleOpen(id: string) {
     navigate(`/editor/${id}`)

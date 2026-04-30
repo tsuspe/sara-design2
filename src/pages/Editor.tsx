@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useFicha } from '@/hooks/useFicha'
 import EditorLayout from '@/components/editor/EditorLayout'
+import type { Ficha } from '@/types'
 
 export default function Editor() {
   const { id } = useParams<{ id: string }>()
@@ -15,13 +16,13 @@ export default function Editor() {
     )
   }
 
-  const handleBack = async () => {
-    await scheduleSave()
+  const handleBack = async (ficha?: Ficha) => {
+    await scheduleSave(ficha)
     navigate('/')
   }
 
-  const handleSave = async () => {
-    await scheduleSave()
+  const handleSave = async (ficha?: Ficha) => {
+    await scheduleSave(ficha)
   }
 
   return <EditorLayout onBack={handleBack} onSave={handleSave} />
