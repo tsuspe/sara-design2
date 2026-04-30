@@ -89,24 +89,6 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <Label className="text-xs">Técnica de impresión</Label>
-        <Input
-          value={ficha.printTechnique}
-          onChange={(e) => onUpdate({ printTechnique: e.target.value })}
-          className="h-7 text-sm"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs">Gramaje (gsm)</Label>
-        <Input
-          value={ficha.gsm}
-          onChange={(e) => onUpdate({ gsm: e.target.value })}
-          className="h-7 text-sm"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
         <Label className="text-xs">Fecha emisión</Label>
         <Input
           type="date"
@@ -122,15 +104,6 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
           type="date"
           value={ficha.receptionDate}
           onChange={(e) => onUpdate({ receptionDate: e.target.value })}
-          className="h-7 text-sm"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs">Taller</Label>
-        <Input
-          value={ficha.tallerName}
-          onChange={(e) => onUpdate({ tallerName: e.target.value })}
           className="h-7 text-sm"
         />
       </div>
@@ -153,15 +126,6 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
         <Input
           value={ficha.season}
           onChange={(e) => onUpdate({ season: e.target.value })}
-          className="h-7 text-sm"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <Label className="text-xs">Tela / Material</Label>
-        <Input
-          value={ficha.fabric}
-          onChange={(e) => onUpdate({ fabric: e.target.value })}
           className="h-7 text-sm"
         />
       </div>
@@ -440,6 +404,19 @@ function ArrowProps({ element, onUpdate }: { element: ArrowElement; onUpdate: (c
   return (
     <>
       <div className="flex flex-col gap-1">
+        <Label className="text-xs">Tipo de flecha</Label>
+        <select
+          value={element.variant ?? 'straight'}
+          onChange={(e) => onUpdate({ variant: e.target.value as ArrowElement['variant'] })}
+          className="h-7 text-sm border rounded px-2 bg-white"
+        >
+          <option value="straight">Recta</option>
+          <option value="curved">Curva</option>
+          <option value="elbow">90 grados</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-1">
         <Label className="text-xs">Color</Label>
         <input
           type="color"
@@ -477,6 +454,8 @@ function ShapeProps({ element, onUpdate }: { element: ShapeElement; onUpdate: (c
           <option value="rect">Rectángulo</option>
           <option value="ellipse">Elipse</option>
           <option value="line">Línea</option>
+          <option value="triangle">Triángulo</option>
+          <option value="diamond">Rombo</option>
         </select>
       </div>
 

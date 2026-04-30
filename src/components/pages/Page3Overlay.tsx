@@ -144,19 +144,13 @@ export default function Page3Overlay({ page, ficha }: Page3OverlayProps) {
             </div>
           </div>
           <div className="flex border-b border-gray-200">
-            <div className="flex-1 border-r border-gray-200 px-2 py-1">
-              <span className="text-gray-400">EMPRESA EMISORA: </span><span className="font-medium">{ficha.brand || '—'}</span>
-            </div>
             <div className="flex-1 px-2 py-1">
-              <span className="text-gray-400">TALLER: </span><span className="font-medium">{ficha.tallerName || '—'}</span>
+              <span className="text-gray-400">EMPRESA EMISORA: </span><span className="font-medium">{ficha.brand || '—'}</span>
             </div>
           </div>
           <div className="flex border-b border-gray-200">
-            <div className="flex-1 border-r border-gray-200 px-2 py-1">
-              <span className="text-gray-400">RESPONSABLE: </span><span className="font-medium">{ficha.designerName || '—'}</span>
-            </div>
             <div className="flex-1 px-2 py-1">
-              <span className="text-gray-400">RESPONSABLES TALLER: </span><span className="font-medium">{ficha.tallerName || '—'}</span>
+              <span className="text-gray-400">RESPONSABLE: </span><span className="font-medium">{ficha.designerName || '—'}</span>
             </div>
           </div>
           <div className="flex items-center gap-4 px-2 py-1 flex-wrap">

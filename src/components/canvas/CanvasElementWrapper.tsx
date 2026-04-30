@@ -70,14 +70,21 @@ export default function CanvasElementWrapper({
       onMouseDown={onSelect}
       style={{
         zIndex: zIndex + 100,
-        transform: `rotate(${rotation}deg)`,
-        outline: isSelected ? '2px solid #3b82f6' : 'none',
-        outlineOffset: '1px',
       }}
       bounds="parent"
       enableResizing={isSelected}
     >
-      {renderContent()}
+      <div
+        className="w-full h-full"
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          transformOrigin: 'center center',
+          outline: isSelected ? '2px solid #3b82f6' : 'none',
+          outlineOffset: '1px',
+        }}
+      >
+        {renderContent()}
+      </div>
     </Rnd>
   )
 }

@@ -39,13 +39,14 @@ export interface LabelElement extends BaseCanvasElement {
 
 export interface ArrowElement extends BaseCanvasElement {
   type: 'arrow'
+  variant?: 'straight' | 'curved' | 'elbow'
   color: string
   strokeWidth: number
 }
 
 export interface ShapeElement extends BaseCanvasElement {
   type: 'shape'
-  shape: 'rect' | 'ellipse' | 'line'
+  shape: 'rect' | 'ellipse' | 'line' | 'triangle' | 'diamond'
   fill: string
   stroke: string
   strokeWidth: number

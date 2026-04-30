@@ -43,6 +43,24 @@ export default function ShapeRenderer({ element }: Props) {
           strokeWidth={strokeWidth}
         />
       )}
+      {shape === 'triangle' && (
+        <polygon
+          points={`${size.w / 2},${strokeWidth / 2} ${size.w - strokeWidth / 2},${size.h - strokeWidth / 2} ${strokeWidth / 2},${size.h - strokeWidth / 2}`}
+          fill={fill}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeLinejoin="round"
+        />
+      )}
+      {shape === 'diamond' && (
+        <polygon
+          points={`${size.w / 2},${strokeWidth / 2} ${size.w - strokeWidth / 2},${size.h / 2} ${size.w / 2},${size.h - strokeWidth / 2} ${strokeWidth / 2},${size.h / 2}`}
+          fill={fill}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeLinejoin="round"
+        />
+      )}
     </svg>
   )
 }

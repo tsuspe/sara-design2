@@ -58,6 +58,7 @@ export function useCanvas() {
         return {
           ...base,
           type: 'arrow',
+          variant: 'straight',
           color: '#000000',
           strokeWidth: 2,
           size: { w: 100, h: 40 },

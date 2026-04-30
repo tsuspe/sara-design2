@@ -4,6 +4,18 @@ interface Props { element: ArrowElement; isSelected: boolean }
 
 export default function ArrowRenderer({ element }: Props) {
   const { size, color, strokeWidth } = element
+  const variant = element.variant ?? 'straight'
+  const markerId = `arrow-${element.id}`
+  const endX = Math.max(0, size.w - 10)
+  const midY = size.h / 2
+  const padding = Math.max(strokeWidth, 4)
+  const path =
+    variant === 'curved'
+      ? `M 0 ${midY} Q ${size.w / 2} ${padding} ${endX} ${midY}`
+      : variant === 'elbow'
+        ? `M ${padding} ${padding} V ${midY} H ${endX}`
+        : `M 0 ${midY} H ${endX}`
+
   return (
     <svg
       width={size.w}
@@ -12,18 +24,18 @@ export default function ArrowRenderer({ element }: Props) {
       className="w-full h-full"
     >
       <defs>
-        <marker id={`arrow-${element.id}`} markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+        <marker id={markerId} markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" fill={color} />
         </marker>
       </defs>
-      <line
-        x1={0}
-        y1={size.h / 2}
-        x2={size.w - 10}
-        y2={size.h / 2}
+      <path
+        d={path}
+        fill="none"
         stroke={color}
         strokeWidth={strokeWidth}
-        markerEnd={`url(#arrow-${element.id})`}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        markerEnd={`url(#${markerId})`}
       />
     </svg>
   )

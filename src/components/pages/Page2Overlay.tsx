@@ -81,16 +81,16 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
           <div className="flex flex-col flex-1 border-r border-gray-200">
             <DataCell label="Brand" value={ficha.brand} />
             <DataCell label="Season" value={ficha.season} />
-            <DataCell label="Fabric" value={ficha.fabric} />
+            <DataCell label="Line" value={ficha.line} />
           </div>
           <div className="flex flex-col flex-1 border-r border-gray-200">
-            <DataCell label="Fabrics Detail" value={ficha.fabric} />
-            <DataCell label="Print" value={ficha.printTechnique} />
+            <DataCell label="Model" value={ficha.modelName} />
+            <DataCell label="Article" value={ficha.article} />
             <DataCell label="Size" value={ficha.size} />
           </div>
           <div className="flex flex-col flex-1">
-            <DataCell label="Gsm" value={ficha.gsm || '—'} />
             <DataCell label="Date" value={formatDate(ficha.emissionDate)} />
+            <DataCell label="Reception" value={formatDate(ficha.receptionDate)} />
             <DataCell label="Designer" value={ficha.designerName} />
           </div>
         </div>

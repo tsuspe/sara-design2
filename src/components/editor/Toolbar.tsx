@@ -1,10 +1,26 @@
 import { useRef } from 'react'
-import { Image, FileText, Type, Tag, ArrowRight, Square, ChevronUp, ChevronDown, Trash2 } from 'lucide-react'
+import {
+  Image,
+  FileText,
+  Type,
+  Tag,
+  ArrowRight,
+  CornerDownRight,
+  Square,
+  Circle,
+  Minus,
+  Triangle,
+  Diamond,
+  ChevronUp,
+  ChevronDown,
+  Trash2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useFichaStore } from '@/store/fichaStore'
 import { useCanvas } from '@/hooks/useCanvas'
 import { fileToDataUrl, resizeImage } from '@/utils/imageUtils'
 import { pdfFirstPageToDataUrl } from '@/utils/pdfToImage'
+import type { ArrowElement, ShapeElement } from '@/types'
 
 export default function Toolbar() {
   const imageInputRef = useRef<HTMLInputElement>(null)
@@ -27,6 +43,15 @@ export default function Toolbar() {
   }
 
   const page1 = currentPageIndex === 0 ? currentPage : null
+  const addArrow = (variant: NonNullable<ArrowElement['variant']>) => {
+    const size = variant === 'elbow' ? { w: 120, h: 80 } : { w: 120, h: 40 }
+    addElement(createElement('arrow', { variant, size }))
+  }
+
+  const addShape = (shape: ShapeElement['shape']) => {
+    const size = shape === 'line' ? { w: 140, h: 24 } : { w: 100, h: 100 }
+    addElement(createElement('shape', { shape, size }))
+  }
 
   return (
     <div className="w-64 bg-white border-r flex-shrink-0 flex flex-col overflow-y-auto">
@@ -89,22 +114,82 @@ export default function Toolbar() {
           >
             <Tag className="w-4 h-4" /> Etiqueta
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="justify-start gap-2"
-            onClick={() => addElement(createElement('arrow'))}
-          >
-            <ArrowRight className="w-4 h-4" /> Flecha
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="justify-start gap-2"
-            onClick={() => addElement(createElement('shape'))}
-          >
-            <Square className="w-4 h-4" /> Forma
-          </Button>
+          <div className="grid grid-cols-3 gap-1 pt-1">
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addArrow('straight')}
+              title="Flecha recta"
+            >
+              <ArrowRight className="w-4 h-4" /> Recta
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addArrow('curved')}
+              title="Flecha curva"
+            >
+              <ArrowRight className="w-4 h-4 rotate-45" /> Curva
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addArrow('elbow')}
+              title="Flecha en 90 grados"
+            >
+              <CornerDownRight className="w-4 h-4" /> 90º
+            </Button>
+          </div>
+          <div className="grid grid-cols-3 gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addShape('rect')}
+              title="Rectángulo"
+            >
+              <Square className="w-4 h-4" /> Rect.
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addShape('ellipse')}
+              title="Círculo / elipse"
+            >
+              <Circle className="w-4 h-4" /> Círc.
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addShape('line')}
+              title="Línea"
+            >
+              <Minus className="w-4 h-4" /> Línea
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addShape('triangle')}
+              title="Triángulo"
+            >
+              <Triangle className="w-4 h-4" /> Tri.
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="justify-start gap-1 px-2"
+              onClick={() => addShape('diamond')}
+              title="Rombo"
+            >
+              <Diamond className="w-4 h-4" /> Rombo
+            </Button>
+          </div>
         </div>
       </div>
 
