@@ -58,10 +58,12 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
               contentEditable={!readOnly}
               suppressContentEditableWarning
               onBlur={handleTitleBlur}
+              onTouchStart={(e) => !readOnly && e.stopPropagation()}
               className="text-2xl font-bold tracking-wide uppercase text-gray-900 outline-none truncate"
               style={{
                 cursor: readOnly ? 'default' : 'text',
                 pointerEvents: readOnly ? 'none' : 'auto',
+                touchAction: readOnly ? 'none' : 'auto',
                 minWidth: 80,
                 fontFamily: ficha.titleFontFamily ?? 'Arial, sans-serif',
                 fontSize: ficha.titleFontSize ?? 24,
@@ -108,29 +110,27 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
         <span className="text-[9px] uppercase tracking-widest text-gray-400 shrink-0 mr-1">Colour pallet</span>
         {page.colorPalette.map((color, i) => (
           <div key={i} className="relative group shrink-0">
-            <button
-              type="button"
-              onClick={() => !readOnly && colorInputRefs.current[i]?.click()}
-              className="w-7 h-7 rounded-full border border-gray-300 shadow-sm block"
+            <label
+              className="w-7 h-7 rounded-full border border-gray-300 shadow-sm block cursor-pointer overflow-hidden"
               style={{ backgroundColor: color }}
               title={color}
-            />
-            {!readOnly && (
-              <>
+            >
+              {!readOnly && (
                 <input
                   ref={(el) => { colorInputRefs.current[i] = el }}
                   type="color"
                   value={color}
                   onChange={(e) => handleColorChange(i, e.target.value)}
-                  className="absolute opacity-0 w-0 h-0"
-                  style={{ pointerEvents: 'none' }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveColor(i)}
-                  className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[9px] hidden group-hover:flex items-center justify-center leading-none"
-                >×</button>
-              </>
+              )}
+            </label>
+            {!readOnly && (
+              <button
+                type="button"
+                onClick={() => handleRemoveColor(i)}
+                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[9px] hidden group-hover:flex items-center justify-center leading-none"
+              >×</button>
             )}
           </div>
         ))}

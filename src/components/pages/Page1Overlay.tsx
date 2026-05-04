@@ -42,9 +42,6 @@ export default function Page1Overlay({ ficha }: Page1OverlayProps) {
           zIndex: 1,
           border: '3px solid #111827',
           backgroundColor: '#ffffff',
-          backgroundImage:
-            'linear-gradient(rgba(173,216,230,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(173,216,230,0.45) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
         }}
       />
 

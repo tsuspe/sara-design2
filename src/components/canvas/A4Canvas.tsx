@@ -31,7 +31,7 @@ export default function A4Canvas({ pageRef }: Props) {
 
   const page = currentFicha?.pages[currentPageIndex]
 
-  const handleCanvasClick = (e: React.MouseEvent) => {
+  const handleCanvasClick = (e: React.MouseEvent | React.TouchEvent) => {
     if (e.target === e.currentTarget) setSelectedElementId(null)
   }
 
@@ -43,6 +43,7 @@ export default function A4Canvas({ pageRef }: Props) {
       <div
         ref={ref}
         onClick={handleCanvasClick}
+        onTouchEnd={handleCanvasClick}
         className="relative bg-white shadow-lg"
         style={{ width: A4_WIDTH, height: A4_HEIGHT, flexShrink: 0, margin: '0 auto' }}
       >

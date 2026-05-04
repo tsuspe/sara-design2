@@ -68,11 +68,14 @@ export default function CanvasElementWrapper({
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       onMouseDown={onSelect}
+      onTouchStart={onSelect}
       style={{
         zIndex: zIndex + 100,
+        touchAction: 'none',
       }}
       bounds="parent"
       enableResizing={isSelected}
+      enableUserSelectHack={false}
     >
       <div
         className="w-full h-full"
