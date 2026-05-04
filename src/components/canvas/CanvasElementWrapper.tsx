@@ -19,7 +19,8 @@ export default function CanvasElementWrapper({
   onSelect,
   onUpdate,
 }: Props) {
-  const { position, size, rotation, visible, zIndex } = element
+  const { position, size, rotation, visible, zIndex, type } = element
+  const isEditable = isSelected && (type === 'text' || type === 'label')
 
   if (!visible) return null
 
@@ -69,12 +70,13 @@ export default function CanvasElementWrapper({
       onResizeStop={handleResizeStop}
       onMouseDown={onSelect}
       onTouchStart={onSelect}
+      disableDragging={isEditable}
       style={{
         zIndex: zIndex + 100,
-        touchAction: 'none',
+        touchAction: isEditable ? 'auto' : 'none',
       }}
       bounds="parent"
-      enableResizing={isSelected}
+      enableResizing={isSelected && !isEditable}
       enableUserSelectHack={false}
     >
       <div

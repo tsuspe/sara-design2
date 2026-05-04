@@ -129,7 +129,7 @@ export default function Page2Overlay({ page, ficha, onUpdatePage, readOnly = fal
               <button
                 type="button"
                 onClick={() => handleRemoveColor(i)}
-                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[9px] hidden group-hover:flex items-center justify-center leading-none"
+                className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full text-white text-[9px] flex items-center justify-center leading-none opacity-60 hover:opacity-100"
               >×</button>
             )}
           </div>

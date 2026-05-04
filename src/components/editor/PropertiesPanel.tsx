@@ -457,6 +457,16 @@ function TextProps({ element, onUpdate }: { element: TextElement; onUpdate: (c: 
   return (
     <>
       <div className="flex flex-col gap-1">
+        <Label className="text-xs">Contenido</Label>
+        <textarea
+          value={element.content}
+          onChange={(e) => onUpdate({ content: e.target.value })}
+          rows={3}
+          className="text-sm border rounded px-2 py-1 resize-none"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
         <Label className="text-xs">Fuente</Label>
         <FontSelect
           value={element.fontFamily}

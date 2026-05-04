@@ -1,14 +1,24 @@
+import { useRef, useEffect } from 'react'
 import type { TextElement } from '@/types'
 
 interface Props { element: TextElement; isSelected: boolean; onUpdate: (content: string) => void }
 
 export default function TextRenderer({ element, isSelected, onUpdate }: Props) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isSelected && ref.current) {
+      ref.current.focus()
+    }
+  }, [isSelected])
+
   const stopTouchForEditing = (e: React.TouchEvent) => {
     if (isSelected) e.stopPropagation()
   }
 
   return (
     <div
+      ref={ref}
       contentEditable={isSelected}
       suppressContentEditableWarning
       onBlur={(e) => onUpdate(e.currentTarget.textContent ?? '')}
