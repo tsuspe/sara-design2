@@ -75,6 +75,7 @@ export const useFichaStore = create<FichaStore>((set) => ({
       if (!state.currentFicha) return state
       const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
+      if (!('elements' in page)) return state
       pages[state.currentPageIndex] = {
         ...page,
         elements: [...page.elements, element],
@@ -95,9 +96,10 @@ export const useFichaStore = create<FichaStore>((set) => ({
       if (!state.currentFicha) return state
       const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
+      if (!('elements' in page)) return state
       pages[state.currentPageIndex] = {
         ...page,
-        elements: page.elements.map((el) =>
+        elements: page.elements.map((el: CanvasElement) =>
           el.id === id ? ({ ...el, ...changes } as CanvasElement) : el
         ),
       } as FichaPage
@@ -116,9 +118,10 @@ export const useFichaStore = create<FichaStore>((set) => ({
       if (!state.currentFicha) return state
       const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
+      if (!('elements' in page)) return state
       pages[state.currentPageIndex] = {
         ...page,
-        elements: page.elements.filter((el) => el.id !== id),
+        elements: page.elements.filter((el: CanvasElement) => el.id !== id),
       } as FichaPage
       return {
         currentFicha: {
@@ -137,7 +140,8 @@ export const useFichaStore = create<FichaStore>((set) => ({
       if (!state.currentFicha) return state
       const pages = [...state.currentFicha.pages] as FichaPage[]
       const page = pages[state.currentPageIndex]
-      const elements = [...page.elements]
+      if (!('elements' in page)) return state
+      const elements = [...page.elements] as CanvasElement[]
       const idx = elements.findIndex((el) => el.id === id)
       if (idx === -1) return state
       const targetIdx = direction === 'up' ? idx + 1 : idx - 1

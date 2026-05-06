@@ -53,9 +53,11 @@ export default function Toolbar() {
     addElement(createElement('shape', { shape, size }))
   }
 
+  const isCanvasPage = currentPageIndex !== 3
+
   return (
     <div className="w-64 bg-white border-r flex-shrink-0 flex flex-col overflow-y-auto">
-      <div className="p-3 border-b">
+      {isCanvasPage && <div className="p-3 border-b">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Añadir elemento</p>
         <div className="flex flex-col gap-1">
           {/* Hidden file inputs */}
@@ -191,7 +193,7 @@ export default function Toolbar() {
             </Button>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Annotations toggle — only for page 1 */}
       {page1 && page1.type === 'visual' && (

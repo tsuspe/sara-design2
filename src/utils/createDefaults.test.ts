@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { createDefaultFicha, createDefaultPage1, createDefaultPage2, createDefaultPage3 } from './createDefaults'
+import { createDefaultFicha, createDefaultPage1, createDefaultPage2, createDefaultPage3, createDefaultPage4 } from './createDefaults'
 
 describe('createDefaults', () => {
   describe('createDefaultFicha()', () => {
-    it('should return an object with .pages of length 3', () => {
+    it('should return an object with .pages of length 4', () => {
       const ficha = createDefaultFicha()
-      expect(ficha.pages).toHaveLength(3)
+      expect(ficha.pages).toHaveLength(4)
     })
 
     it('should have pages[0].type === "visual"', () => {
@@ -21,6 +21,11 @@ describe('createDefaults', () => {
     it('should have pages[2].type === "technical"', () => {
       const ficha = createDefaultFicha()
       expect(ficha.pages[2].type).toBe('technical')
+    })
+
+    it('should have pages[3].type === "phases"', () => {
+      const ficha = createDefaultFicha()
+      expect(ficha.pages[3].type).toBe('phases')
     })
 
     it('should have a non-empty string id (UUID)', () => {
@@ -85,6 +90,25 @@ describe('createDefaults', () => {
     it('should have garmentThumbnailData as undefined', () => {
       const page = createDefaultPage3()
       expect(page.garmentThumbnailData).toBeUndefined()
+    })
+  })
+
+  describe('createDefaultPage4()', () => {
+    it('should return a Page4Phases with type "phases"', () => {
+      const page = createDefaultPage4()
+      expect(page.type).toBe('phases')
+    })
+
+    it('should have empty phases array', () => {
+      const page = createDefaultPage4()
+      expect(page.phases).toEqual([])
+    })
+
+    it('should have columnStyles for all columns', () => {
+      const page = createDefaultPage4()
+      expect(Object.keys(page.columnStyles)).toContain('cod')
+      expect(Object.keys(page.columnStyles)).toContain('descripcion')
+      expect(Object.keys(page.columnStyles)).toContain('grafico')
     })
   })
 })

@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import { useFichaStore } from '@/store/fichaStore'
 import { getFichaById, saveFicha } from '@/db/indexedDB'
 import type { Ficha } from '@/types'
+import { createDefaultPage4 } from '@/utils/createDefaults'
 
 export function useFicha(id: string) {
   const { currentFicha, setCurrentFicha, markClean } = useFichaStore()
@@ -10,7 +11,13 @@ export function useFicha(id: string) {
   // Load ficha on mount
   useEffect(() => {
     getFichaById(id).then((ficha) => {
-      if (ficha) setCurrentFicha(ficha)
+      if (ficha) {
+        // Migrate: add page 4 if missing (fichas created before page 4 existed)
+        if ((ficha.pages as unknown[]).length === 3) {
+          (ficha.pages as unknown[]).push(createDefaultPage4())
+        }
+        setCurrentFicha(ficha)
+      }
     })
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)

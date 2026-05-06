@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import type { Ficha, Page1Visual, Page2Graphic, Page3Technical } from '@/types'
+import type { Ficha, Page1Visual, Page2Graphic, Page3Technical, Page4Phases, ColumnStyle } from '@/types'
 
 export function createDefaultPage1(): Page1Visual {
   return {
@@ -34,6 +34,39 @@ export function createDefaultPage3(): Page3Technical {
   }
 }
 
+const DEFAULT_COLUMN_STYLE: ColumnStyle = {
+  backgroundColor: '#f3f4f6',
+  textColor: '#111827',
+  fontFamily: 'Arial, sans-serif',
+  fontWeight: 'bold',
+  fontStyle: 'normal',
+}
+
+export function createDefaultPage4(): Page4Phases {
+  return {
+    type: 'phases',
+    garmentName: '',
+    responsibleName: '',
+    phases: [],
+    columnStyles: {
+      cod: { ...DEFAULT_COLUMN_STYLE },
+      fase: { ...DEFAULT_COLUMN_STYLE },
+      descripcion: { ...DEFAULT_COLUMN_STYLE },
+      maquina: { ...DEFAULT_COLUMN_STYLE },
+      grafico: { ...DEFAULT_COLUMN_STYLE },
+      observaciones: { ...DEFAULT_COLUMN_STYLE },
+    },
+    columnWidths: {
+      cod: 50,
+      fase: 45,
+      descripcion: 230,
+      maquina: 90,
+      grafico: 140,
+      observaciones: 140,
+    },
+  }
+}
+
 export function createDefaultFicha(): Ficha {
   const now = new Date().toISOString()
   return {
@@ -62,7 +95,7 @@ export function createDefaultFicha(): Ficha {
     titleFontStyle: 'normal',
     bodyFontFamily: 'Arial, sans-serif',
     customFonts: [],
-    pages: [createDefaultPage1(), createDefaultPage2(), createDefaultPage3()],
+    pages: [createDefaultPage1(), createDefaultPage2(), createDefaultPage3(), createDefaultPage4()],
     createdAt: now,
     updatedAt: now,
     thumbnailData: undefined,

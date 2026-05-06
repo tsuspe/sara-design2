@@ -4,9 +4,9 @@ import jsPDF from 'jspdf'
 import { applyHtml2CanvasSafeStyles } from '@/utils/html2canvasSafe'
 
 export function useExport() {
-  const pageRefs = useRef<(HTMLDivElement | null)[]>([null, null, null])
+  const pageRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
 
-  const capturePage = useCallback(async (index: 0 | 1 | 2): Promise<string> => {
+  const capturePage = useCallback(async (index: 0 | 1 | 2 | 3): Promise<string> => {
     const el = pageRefs.current[index]
     if (!el) throw new Error(`Page ${index} ref not set`)
     const canvas = await html2canvas(el, {
@@ -22,9 +22,9 @@ export function useExport() {
 
   const exportPDF = useCallback(async (fichaTitle: string) => {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       if (i > 0) doc.addPage()
-      const imgData = await capturePage(i as 0 | 1 | 2)
+      const imgData = await capturePage(i as 0 | 1 | 2 | 3)
       doc.addImage(imgData, 'PNG', 0, 0, 210, 297)
     }
     const filename = `${fichaTitle || 'ficha'}-${Date.now()}.pdf`
@@ -45,7 +45,7 @@ export function useExport() {
     return canvas.toDataURL('image/png')
   }, [])
 
-  const setPageRef = useCallback((index: 0 | 1 | 2, el: HTMLDivElement | null) => {
+  const setPageRef = useCallback((index: 0 | 1 | 2 | 3, el: HTMLDivElement | null) => {
     pageRefs.current[index] = el
   }, [])
 

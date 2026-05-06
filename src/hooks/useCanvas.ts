@@ -25,7 +25,7 @@ export function useCanvas() {
         position: { x: 100, y: 100 },
         size: { w: 200, h: 200 },
         rotation: 0,
-        zIndex: (currentPage?.elements.length ?? 0),
+        zIndex: (currentPage && 'elements' in currentPage ? currentPage.elements.length : 0),
         visible: true,
       }
       if (type === 'text') {

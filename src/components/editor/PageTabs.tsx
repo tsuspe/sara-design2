@@ -6,6 +6,7 @@ const PAGE_LABELS: Record<PageIndex, string> = {
   0: 'Página 1 — Visual',
   1: 'Página 2 — Gráfico',
   2: 'Página 3 — Técnico',
+  3: 'Página 4 — Fases',
 }
 
 export default function PageTabs() {
@@ -18,7 +19,7 @@ export default function PageTabs() {
       className="px-4 pt-2 bg-gray-50 border-b"
     >
       <TabsList>
-        {([0, 1, 2] as PageIndex[]).map((idx) => (
+        {([0, 1, 2, 3] as PageIndex[]).map((idx) => (
           <TabsTrigger key={idx} value={idx}>
             {PAGE_LABELS[idx]}
           </TabsTrigger>

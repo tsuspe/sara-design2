@@ -5,6 +5,7 @@ import type { CanvasElement, FichaPage } from '@/types'
 import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
+import Page4Overlay from '@/components/pages/Page4Overlay'
 
 interface Props {
   pageRef?: React.RefObject<HTMLDivElement | null>  // for html2canvas export
@@ -78,9 +79,15 @@ export default function A4Canvas({ pageRef }: Props) {
             onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
           />
         )}
+        {page.type === 'phases' && (
+          <Page4Overlay
+            page={page}
+            onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
+          />
+        )}
 
-        {/* Render elements sorted by zIndex */}
-        {[...page.elements]
+        {/* Render elements sorted by zIndex (not for page 4 which has no canvas elements) */}
+        {'elements' in page && [...page.elements]
           .sort((a, b) => a.zIndex - b.zIndex)
           .map((element) => (
             <CanvasElementWrapper

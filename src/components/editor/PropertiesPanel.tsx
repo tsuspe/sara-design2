@@ -796,7 +796,8 @@ export default function PropertiesPanel() {
   } = useFichaStore()
 
   const page = currentFicha?.pages[currentPageIndex]
-  const selectedElement = page?.elements.find((el) => el.id === selectedElementId) ?? null
+  const pageElements = page && 'elements' in page ? page.elements : []
+  const selectedElement = pageElements.find((el) => el.id === selectedElementId) ?? null
 
   if (!currentFicha) return null
 
@@ -807,6 +808,23 @@ export default function PropertiesPanel() {
           element={selectedElement}
           onUpdate={(changes) => updateElement(selectedElement.id, changes)}
         />
+      </div>
+    )
+  }
+
+  // Page 4: just show metadata (table editing is inline on the page itself)
+  if (currentPageIndex === 3 && page?.type === 'phases') {
+    return (
+      <div className="w-72 bg-white border-l flex-shrink-0 overflow-y-auto">
+        <div className="flex flex-col gap-2 p-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            Lista de Fases
+          </p>
+          <p className="text-[10px] text-gray-400">
+            Edita la tabla directamente en la página. Haz clic en los títulos de columna para personalizar su estilo. Arrastra los bordes de columna para redimensionar.
+          </p>
+        </div>
+        <FichaMetadataForm ficha={currentFicha} onUpdate={updateFichaField} />
       </div>
     )
   }

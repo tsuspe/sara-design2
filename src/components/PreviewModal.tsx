@@ -9,6 +9,7 @@ import PageRenderer from '@/components/canvas/PageRenderer'
 import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
+import Page4Overlay from '@/components/pages/Page4Overlay'
 import { A4_WIDTH, A4_HEIGHT } from '@/components/canvas/A4Canvas'
 import type { FichaPage } from '@/types'
 import { applyHtml2CanvasSafeStyles } from '@/utils/html2canvasSafe'
@@ -25,13 +26,13 @@ const PREVIEW_SCALE = 0.75
 export default function PreviewModal({ open, onClose }: PreviewModalProps) {
   const { currentFicha } = useFichaStore()
   // Refs to inner 1x unscaled divs for html2canvas export
-  const innerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null])
+  const innerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
 
   if (!currentFicha) return null
 
   const handleExport = async () => {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       if (i > 0) doc.addPage()
       const el = innerRefs.current[i]
       if (!el) continue
@@ -113,10 +114,19 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
                       readOnly
                     />
                   )}
-                  <PageRenderer
-                    page={page}
-                    showAnnotations={page.type === 'visual' ? page.showAnnotations : true}
-                  />
+                  {page.type === 'phases' && (
+                    <Page4Overlay
+                      page={page}
+                      onUpdatePage={() => {}}
+                      readOnly
+                    />
+                  )}
+                  {'elements' in page && (
+                    <PageRenderer
+                      page={page}
+                      showAnnotations={page.type === 'visual' ? page.showAnnotations : true}
+                    />
+                  )}
                 </div>
               </div>
             </div>

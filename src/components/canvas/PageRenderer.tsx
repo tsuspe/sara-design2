@@ -12,6 +12,7 @@ interface Props {
 }
 
 export default function PageRenderer({ page, showAnnotations = true }: Props) {
+  if (!('elements' in page)) return null
   const visibleElements = page.elements
     .filter((el) => el.visible)
     .filter((el) => showAnnotations || (el.type !== 'arrow' && el.type !== 'label'))
