@@ -106,7 +106,6 @@ describe('createDefaults', () => {
 
     it('should have columnStyles for all columns', () => {
       const page = createDefaultPage4()
-      expect(Object.keys(page.columnStyles)).toContain('cod')
       expect(Object.keys(page.columnStyles)).toContain('descripcion')
       expect(Object.keys(page.columnStyles)).toContain('grafico')
     })

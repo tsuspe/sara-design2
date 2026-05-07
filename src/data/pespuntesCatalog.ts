@@ -31,6 +31,7 @@ export const PESPUNTES_CATALOG: PespunteGraphic[] = [
   { key: 'costura-cargada-lateral-2', label: 'Costura cargada lateral 2', src: '/graphics/pespuntes/costura-cargada-lateral-2.png' },
   { key: 'costura-cerrada-lateral-1', label: 'Costura cerrada lateral 1', src: '/graphics/pespuntes/costura-cerrada-lateral-1.png' },
   { key: 'costura-cerrada-lateral-2', label: 'Costura cerrada lateral 2', src: '/graphics/pespuntes/costura-cerrada-lateral-2.png' },
+  { key: 'plancha', label: 'Plancha', src: '/graphics/pespuntes/plancha.png' },
 ]
 
 export function getPespunteBySrc(key: string): PespunteGraphic | undefined {

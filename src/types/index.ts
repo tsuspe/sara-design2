@@ -126,7 +126,6 @@ export interface ColumnStyle {
 
 export interface PhaseRow {
   id: string
-  cod: string
   fase: string
   descripcion: string
   maquina: string

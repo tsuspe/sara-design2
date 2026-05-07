@@ -11,7 +11,6 @@ interface Page4OverlayProps {
 }
 
 const COLUMNS = [
-  { key: 'cod', label: 'Cod' },
   { key: 'fase', label: 'Fase' },
   { key: 'descripcion', label: 'Descripción' },
   { key: 'maquina', label: 'Máquina' },
@@ -22,7 +21,6 @@ const COLUMNS = [
 function createEmptyRow(): PhaseRow {
   return {
     id: uuidv4(),
-    cod: '',
     fase: '',
     descripcion: '',
     maquina: '',

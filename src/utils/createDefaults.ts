@@ -49,7 +49,6 @@ export function createDefaultPage4(): Page4Phases {
     responsibleName: '',
     phases: [],
     columnStyles: {
-      cod: { ...DEFAULT_COLUMN_STYLE },
       fase: { ...DEFAULT_COLUMN_STYLE },
       descripcion: { ...DEFAULT_COLUMN_STYLE },
       maquina: { ...DEFAULT_COLUMN_STYLE },
@@ -57,7 +56,6 @@ export function createDefaultPage4(): Page4Phases {
       observaciones: { ...DEFAULT_COLUMN_STYLE },
     },
     columnWidths: {
-      cod: 50,
       fase: 45,
       descripcion: 230,
       maquina: 90,
