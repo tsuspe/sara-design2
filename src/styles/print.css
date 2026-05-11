@@ -1,7 +1,14 @@
 @media print {
   /* Hide everything except the print pages */
-  body > * { display: none !important; }
-  #print-root { display: block !important; }
+  body > *:not(#print-root) { display: none !important; }
+
+  #print-root {
+    display: block !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: auto !important;
+  }
 
   /* A4 page setup */
   @page {
