@@ -1,7 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Download, Printer } from 'lucide-react'
+import { Download, Printer, Loader2 } from 'lucide-react'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import { useFichaStore } from '@/store/fichaStore'
@@ -25,15 +25,15 @@ const PREVIEW_SCALE = 0.75
 
 export default function PreviewModal({ open, onClose }: PreviewModalProps) {
   const { currentFicha } = useFichaStore()
-  // Refs to inner 1x unscaled divs for html2canvas export
   const innerRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
+  const [exporting, setExporting] = useState(false)
+  const [printing, setPrinting] = useState(false)
 
   if (!currentFicha) return null
 
-  const handleExport = async () => {
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+  const capturePages = async () => {
+    const images: string[] = []
     for (let i = 0; i < 4; i++) {
-      if (i > 0) doc.addPage()
       const el = innerRefs.current[i]
       if (!el) continue
       const canvas = await html2canvas(el, {
@@ -41,12 +41,53 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
         useCORS: true,
         backgroundColor: '#ffffff',
         logging: false,
-        foreignObjectRendering: true,
         onclone: applyHtml2CanvasSafeStyles,
       })
-      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297)
+      images.push(canvas.toDataURL('image/png'))
     }
-    doc.save(`${currentFicha.title || 'ficha'}-${Date.now()}.pdf`)
+    return images
+  }
+
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      const images = await capturePages()
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
+      images.forEach((imgData, i) => {
+        if (i > 0) doc.addPage()
+        doc.addImage(imgData, 'PNG', 0, 0, 210, 297)
+      })
+      doc.save(`${currentFicha.title || 'ficha'}-${Date.now()}.pdf`)
+    } catch (err) {
+      console.error('Export failed:', err)
+      alert('Error al exportar PDF. Inténtalo de nuevo.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handlePrint = async () => {
+    setPrinting(true)
+    try {
+      const images = await capturePages()
+      // Build print-root with captured images
+      let printRoot = document.getElementById('print-root')
+      if (!printRoot) {
+        printRoot = document.createElement('div')
+        printRoot.id = 'print-root'
+        document.body.appendChild(printRoot)
+      }
+      printRoot.innerHTML = images.map((src) =>
+        `<div class="a4-print-page"><img src="${src}" style="width:100%;height:100%;display:block;" /></div>`
+      ).join('')
+      window.print()
+      printRoot.innerHTML = ''
+    } catch (err) {
+      console.error('Print failed:', err)
+      alert('Error al preparar la impresión. Inténtalo de nuevo.')
+    } finally {
+      setPrinting(false)
+    }
   }
 
   const pages = currentFicha.pages
@@ -134,11 +175,13 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
         </div>
 
         <div className="flex justify-end gap-2 pt-3 border-t bg-white sticky bottom-0 pb-1">
-          <Button variant="outline" onClick={() => window.print()}>
-            <Printer className="w-4 h-4 mr-2" /> Imprimir
+          <Button variant="outline" onClick={handlePrint} disabled={printing || exporting}>
+            {printing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Printer className="w-4 h-4 mr-2" />}
+            {printing ? 'Preparando...' : 'Imprimir'}
           </Button>
-          <Button onClick={handleExport}>
-            <Download className="w-4 h-4 mr-2" /> Exportar PDF
+          <Button onClick={handleExport} disabled={exporting || printing}>
+            {exporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
+            {exporting ? 'Exportando...' : 'Exportar PDF'}
           </Button>
         </div>
       </DialogContent>

@@ -14,7 +14,7 @@ export function useExport() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
-      foreignObjectRendering: true,
+      foreignObjectRendering: false,
       onclone: applyHtml2CanvasSafeStyles,
     })
     return canvas.toDataURL('image/png')
@@ -39,7 +39,7 @@ export function useExport() {
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
-      foreignObjectRendering: true,
+      foreignObjectRendering: false,
       onclone: applyHtml2CanvasSafeStyles,
     })
     return canvas.toDataURL('image/png')
