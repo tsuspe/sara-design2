@@ -1,7 +1,6 @@
 import { useRef, useCallback } from 'react'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 import jsPDF from 'jspdf'
-import { applyHtml2CanvasSafeStyles } from '@/utils/html2canvasSafe'
 
 export function useExport() {
   const pageRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
@@ -9,15 +8,10 @@ export function useExport() {
   const capturePage = useCallback(async (index: 0 | 1 | 2 | 3): Promise<string> => {
     const el = pageRefs.current[index]
     if (!el) throw new Error(`Page ${index} ref not set`)
-    const canvas = await html2canvas(el, {
-      scale: 2,
-      useCORS: true,
+    return toPng(el, {
+      pixelRatio: 2,
       backgroundColor: '#ffffff',
-      logging: false,
-      foreignObjectRendering: false,
-      onclone: applyHtml2CanvasSafeStyles,
     })
-    return canvas.toDataURL('image/png')
   }, [])
 
   const exportPDF = useCallback(async (fichaTitle: string) => {
@@ -34,15 +28,10 @@ export function useExport() {
   const generateThumbnail = useCallback(async (): Promise<string> => {
     const el = pageRefs.current[0]
     if (!el) throw new Error('Page 0 ref not set')
-    const canvas = await html2canvas(el, {
-      scale: 0.25,
-      useCORS: true,
+    return toPng(el, {
+      pixelRatio: 0.25,
       backgroundColor: '#ffffff',
-      logging: false,
-      foreignObjectRendering: false,
-      onclone: applyHtml2CanvasSafeStyles,
     })
-    return canvas.toDataURL('image/png')
   }, [])
 
   const setPageRef = useCallback((index: 0 | 1 | 2 | 3, el: HTMLDivElement | null) => {

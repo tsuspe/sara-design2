@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Download, Printer, Loader2 } from 'lucide-react'
+import { Download, Printer, Loader2, Image as ImageIcon } from 'lucide-react'
 import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 import { useFichaStore } from '@/store/fichaStore'
 import PageRenderer from '@/components/canvas/PageRenderer'
 import Page1Overlay from '@/components/pages/Page1Overlay'
@@ -21,41 +22,37 @@ interface PreviewModalProps {
 
 const PREVIEW_SCALE = 0.75
 
-function PageContent({ page, ficha, readOnly = false, onUpdatePage, onUpdateFicha }: {
+function PageContent({ page, ficha }: {
   page: FichaPage
-  ficha: Ficha | null
-  readOnly?: boolean
-  onUpdatePage?: () => void
-  onUpdateFicha?: () => void
+  ficha: Ficha
 }) {
-  if (!ficha) return null
   return (
     <>
       {page.type === 'visual' && (
-        <Page1Overlay ficha={ficha} readOnly={readOnly} />
+        <Page1Overlay ficha={ficha} readOnly />
       )}
       {page.type === 'graphic' && (
         <Page2Overlay
           page={page}
           ficha={ficha}
-          onUpdatePage={onUpdatePage || (() => {})}
-          onUpdateFicha={onUpdateFicha || (() => {})}
-          readOnly={readOnly}
+          onUpdatePage={() => {}}
+          onUpdateFicha={() => {}}
+          readOnly
         />
       )}
       {page.type === 'technical' && (
         <Page3Overlay
           page={page}
           ficha={ficha}
-          onUpdatePage={onUpdatePage || (() => {})}
-          readOnly={readOnly}
+          onUpdatePage={() => {}}
+          readOnly
         />
       )}
       {page.type === 'phases' && (
         <Page4Overlay
           page={page}
-          onUpdatePage={onUpdatePage || (() => {})}
-          readOnly={readOnly}
+          onUpdatePage={() => {}}
+          readOnly
         />
       )}
       {'elements' in page && (
@@ -70,36 +67,53 @@ function PageContent({ page, ficha, readOnly = false, onUpdatePage, onUpdateFich
 
 export default function PreviewModal({ open, onClose }: PreviewModalProps) {
   const { currentFicha } = useFichaStore()
-  // Refs to hidden full-size pages (no transform) for capture
   const captureRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
   const [exporting, setExporting] = useState(false)
+  const [printContainer, setPrintContainer] = useState<HTMLDivElement | null>(null)
+
+  // Create a container as direct child of body for print CSS to work
+  useEffect(() => {
+    if (!open) return
+    let container = document.getElementById('print-root') as HTMLDivElement | null
+    if (!container) {
+      container = document.createElement('div')
+      container.id = 'print-root'
+      document.body.appendChild(container)
+    }
+    setPrintContainer(container)
+    return () => {
+      // Clean up on close
+      if (container && container.parentNode) {
+        container.parentNode.removeChild(container)
+      }
+      setPrintContainer(null)
+    }
+  }, [open])
 
   if (!currentFicha) return null
 
   const pages = currentFicha.pages
 
-  const capturePages = async () => {
+  const capturePageImages = async (): Promise<string[]> => {
     const images: string[] = []
     for (let i = 0; i < 4; i++) {
       const el = captureRefs.current[i]
       if (!el) continue
-      const canvas = await html2canvas(el, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
+      const dataUrl = await toPng(el, {
         width: A4_WIDTH,
         height: A4_HEIGHT,
+        pixelRatio: 2,
+        backgroundColor: '#ffffff',
       })
-      images.push(canvas.toDataURL('image/png'))
+      images.push(dataUrl)
     }
     return images
   }
 
-  const handleExport = async () => {
+  const handleExportPDF = async () => {
     setExporting(true)
     try {
-      const images = await capturePages()
+      const images = await capturePageImages()
       if (images.length === 0) throw new Error('No pages captured')
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
       images.forEach((imgData, i) => {
@@ -108,8 +122,27 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
       })
       doc.save(`${currentFicha.title || 'ficha'}-${Date.now()}.pdf`)
     } catch (err) {
-      console.error('Export failed:', err)
-      alert('Error al exportar PDF. Inténtalo de nuevo.')
+      console.error('Export PDF failed:', err)
+      alert('Error al exportar PDF: ' + (err instanceof Error ? err.message : String(err)))
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleExportPNG = async () => {
+    setExporting(true)
+    try {
+      const images = await capturePageImages()
+      if (images.length === 0) throw new Error('No pages captured')
+      for (let i = 0; i < images.length; i++) {
+        const link = document.createElement('a')
+        link.download = `${currentFicha.title || 'ficha'}-page${i + 1}-${Date.now()}.png`
+        link.href = images[i]
+        link.click()
+      }
+    } catch (err) {
+      console.error('Export PNG failed:', err)
+      alert('Error al exportar PNG: ' + (err instanceof Error ? err.message : String(err)))
     } finally {
       setExporting(false)
     }
@@ -119,34 +152,37 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
     window.print()
   }
 
+  // Hidden full-size pages rendered into body via portal (for print + capture)
+  const hiddenPages = (
+    <div
+      style={{
+        position: 'absolute',
+        left: '-9999px',
+        top: 0,
+      }}
+    >
+      <CustomFontStyles fonts={currentFicha.customFonts} />
+      {pages.map((page: FichaPage, i: number) => (
+        <div
+          key={i}
+          ref={(el) => { captureRefs.current[i] = el }}
+          className="a4-print-page relative bg-white"
+          style={{
+            width: A4_WIDTH,
+            height: A4_HEIGHT,
+            overflow: 'hidden',
+          }}
+        >
+          <PageContent page={page} ficha={currentFicha} />
+        </div>
+      ))}
+    </div>
+  )
+
   return (
     <>
-      {/* Hidden full-size pages for html2canvas capture + print */}
-      <div
-        id="print-root"
-        style={{
-          position: 'fixed',
-          left: '-9999px',
-          top: 0,
-          zIndex: -1,
-        }}
-      >
-        <CustomFontStyles fonts={currentFicha.customFonts} />
-        {pages.map((page: FichaPage, i: number) => (
-          <div
-            key={i}
-            ref={(el) => { captureRefs.current[i] = el }}
-            className="a4-print-page relative bg-white"
-            style={{
-              width: A4_WIDTH,
-              height: A4_HEIGHT,
-              overflow: 'hidden',
-            }}
-          >
-            <PageContent page={page} ficha={currentFicha} readOnly />
-          </div>
-        ))}
-      </div>
+      {/* Portal: render hidden pages as direct child of body for print CSS */}
+      {printContainer && createPortal(hiddenPages, printContainer)}
 
       <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
         <DialogContent
@@ -185,7 +221,7 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
                       pointerEvents: 'none',
                     }}
                   >
-                    <PageContent page={page} ficha={currentFicha} readOnly />
+                    <PageContent page={page} ficha={currentFicha} />
                   </div>
                 </div>
               </div>
@@ -196,9 +232,13 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
             <Button variant="outline" onClick={handlePrint} disabled={exporting}>
               <Printer className="w-4 h-4 mr-2" /> Imprimir
             </Button>
-            <Button onClick={handleExport} disabled={exporting}>
+            <Button variant="outline" onClick={handleExportPNG} disabled={exporting}>
+              {exporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ImageIcon className="w-4 h-4 mr-2" />}
+              PNG
+            </Button>
+            <Button onClick={handleExportPDF} disabled={exporting}>
               {exporting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Download className="w-4 h-4 mr-2" />}
-              {exporting ? 'Exportando...' : 'Exportar PDF'}
+              PDF
             </Button>
           </div>
         </DialogContent>

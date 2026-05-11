@@ -1,16 +1,21 @@
 @media print {
-  /* Hide everything except the print pages */
-  body > *:not(#print-root) { display: none !important; }
+  /* Hide everything except #print-root (direct child of body via portal) */
+  body > *:not(#print-root) {
+    display: none !important;
+  }
 
   #print-root {
     display: block !important;
     position: static !important;
     left: auto !important;
     top: auto !important;
-    z-index: auto !important;
   }
 
-  /* A4 page setup */
+  #print-root > div {
+    position: static !important;
+    left: auto !important;
+  }
+
   @page {
     size: A4 portrait;
     margin: 0;
