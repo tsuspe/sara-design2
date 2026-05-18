@@ -15,6 +15,7 @@ import type {
 } from '@/types'
 import PatternPiecesPanel from '@/components/editor/PatternPiecesPanel'
 import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 
@@ -302,12 +303,11 @@ function FichaMetadataForm({ ficha, onUpdate }: FichaMetadataFormProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="flex flex-col gap-1">
           <Label className="text-xs">Tamaño título</Label>
-          <Input
-            type="number"
+          <NumberInput
             min={12}
             max={48}
             value={ficha.titleFontSize ?? 24}
-            onChange={(e) => onUpdate({ titleFontSize: Number(e.target.value) })}
+            onChange={(v) => onUpdate({ titleFontSize: v })}
             className="h-7 text-sm"
           />
         </div>
@@ -357,22 +357,20 @@ function CommonProps({ element, onUpdate }: CommonPropsProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="flex flex-col gap-1">
           <Label className="text-xs">X</Label>
-          <Input
-            type="number"
+          <NumberInput
             value={element.position.x}
-            onChange={(e) =>
-              onUpdate({ position: { ...element.position, x: Number(e.target.value) } } as Partial<CanvasElement>)
+            onChange={(v) =>
+              onUpdate({ position: { ...element.position, x: v } } as Partial<CanvasElement>)
             }
             className="h-7 text-sm"
           />
         </div>
         <div className="flex flex-col gap-1">
           <Label className="text-xs">Y</Label>
-          <Input
-            type="number"
+          <NumberInput
             value={element.position.y}
-            onChange={(e) =>
-              onUpdate({ position: { ...element.position, y: Number(e.target.value) } } as Partial<CanvasElement>)
+            onChange={(v) =>
+              onUpdate({ position: { ...element.position, y: v } } as Partial<CanvasElement>)
             }
             className="h-7 text-sm"
           />
@@ -382,22 +380,22 @@ function CommonProps({ element, onUpdate }: CommonPropsProps) {
       <div className="grid grid-cols-2 gap-2">
         <div className="flex flex-col gap-1">
           <Label className="text-xs">W</Label>
-          <Input
-            type="number"
+          <NumberInput
+            min={1}
             value={element.size.w}
-            onChange={(e) =>
-              onUpdate({ size: { ...element.size, w: Number(e.target.value) } } as Partial<CanvasElement>)
+            onChange={(v) =>
+              onUpdate({ size: { ...element.size, w: v } } as Partial<CanvasElement>)
             }
             className="h-7 text-sm"
           />
         </div>
         <div className="flex flex-col gap-1">
           <Label className="text-xs">H</Label>
-          <Input
-            type="number"
+          <NumberInput
+            min={1}
             value={element.size.h}
-            onChange={(e) =>
-              onUpdate({ size: { ...element.size, h: Number(e.target.value) } } as Partial<CanvasElement>)
+            onChange={(v) =>
+              onUpdate({ size: { ...element.size, h: v } } as Partial<CanvasElement>)
             }
             className="h-7 text-sm"
           />
@@ -406,12 +404,11 @@ function CommonProps({ element, onUpdate }: CommonPropsProps) {
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Rotación</Label>
-        <Input
-          type="number"
+        <NumberInput
           min={0}
           max={360}
           value={element.rotation}
-          onChange={(e) => onUpdate({ rotation: Number(e.target.value) } as Partial<CanvasElement>)}
+          onChange={(v) => onUpdate({ rotation: v } as Partial<CanvasElement>)}
           className="h-7 text-sm"
         />
       </div>
@@ -476,12 +473,11 @@ function TextProps({ element, onUpdate }: { element: TextElement; onUpdate: (c: 
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Tamaño de fuente</Label>
-        <Input
-          type="number"
+        <NumberInput
           min={6}
           max={200}
           value={element.fontSize}
-          onChange={(e) => onUpdate({ fontSize: Number(e.target.value) })}
+          onChange={(v) => onUpdate({ fontSize: v })}
           className="h-7 text-sm"
         />
       </div>
@@ -557,12 +553,11 @@ function LabelProps({ element, onUpdate }: { element: LabelElement; onUpdate: (c
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Tamaño de fuente</Label>
-        <Input
-          type="number"
+        <NumberInput
           min={6}
           max={200}
           value={element.fontSize}
-          onChange={(e) => onUpdate({ fontSize: Number(e.target.value) })}
+          onChange={(v) => onUpdate({ fontSize: v })}
           className="h-7 text-sm"
         />
       </div>
@@ -654,12 +649,11 @@ function ArrowProps({ element, onUpdate }: { element: ArrowElement; onUpdate: (c
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Grosor de trazo</Label>
-        <Input
-          type="number"
+        <NumberInput
           min={1}
           max={10}
           value={element.strokeWidth}
-          onChange={(e) => onUpdate({ strokeWidth: Number(e.target.value) })}
+          onChange={(v) => onUpdate({ strokeWidth: v })}
           className="h-7 text-sm"
         />
       </div>
@@ -707,12 +701,11 @@ function ShapeProps({ element, onUpdate }: { element: ShapeElement; onUpdate: (c
 
       <div className="flex flex-col gap-1">
         <Label className="text-xs">Grosor de trazo</Label>
-        <Input
-          type="number"
+        <NumberInput
           min={0}
           max={20}
           value={element.strokeWidth}
-          onChange={(e) => onUpdate({ strokeWidth: Number(e.target.value) })}
+          onChange={(v) => onUpdate({ strokeWidth: v })}
           className="h-7 text-sm"
         />
       </div>

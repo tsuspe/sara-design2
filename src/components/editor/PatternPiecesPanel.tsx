@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import type { PatternPiece, Page3Technical, Measurement } from '@/types'
 import { Input } from '@/components/ui/input'
+import { NumberInput } from '@/components/ui/number-input'
 import { Label } from '@/components/ui/label'
 
 function nextLetterRef(existing: PatternPiece[]): string {
@@ -186,13 +187,10 @@ export default function PatternPiecesPanel({ page, onUpdatePieces, onUpdateMeasu
                 </div>
                 <div className="flex flex-col gap-0.5 w-16">
                   <Label className="text-xs">Cantidad</Label>
-                  <Input
-                    type="number"
+                  <NumberInput
                     min={1}
                     value={piece.quantity}
-                    onChange={(e) =>
-                      handleUpdate(piece.id, { quantity: Math.max(1, Number(e.target.value)) })
-                    }
+                    onChange={(v) => handleUpdate(piece.id, { quantity: v })}
                     className="h-6 text-xs text-center"
                   />
                 </div>
