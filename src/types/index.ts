@@ -114,7 +114,28 @@ export interface Page3Technical {
   measurements: Measurement[]
 }
 
-// ─── Page 4: Lista de Fases ──────────────────────────────────────────────────
+// ─── Page 4: Escalado (Tabla de Medidas) ─────────────────────────────────────
+
+export interface ScalingColumn {
+  id: string
+  label: string
+  kind: 'text' | 'number'
+}
+
+export interface ScalingRow {
+  id: string
+  values: Record<string, string>
+}
+
+export interface Page4Scaling {
+  type: 'scaling'
+  elements: CanvasElement[]
+  columns: ScalingColumn[]
+  rows: ScalingRow[]
+  columnWidths: Record<string, number>
+}
+
+// ─── Page 5: Lista de Fases ──────────────────────────────────────────────────
 
 export interface ColumnStyle {
   backgroundColor: string
@@ -142,7 +163,7 @@ export interface Page4Phases {
   columnWidths: Record<string, number>
 }
 
-export type FichaPage = Page1Visual | Page2Graphic | Page3Technical | Page4Phases
+export type FichaPage = Page1Visual | Page2Graphic | Page3Technical | Page4Scaling | Page4Phases
 
 // ─── Ficha ────────────────────────────────────────────────────────────────────
 
@@ -172,7 +193,7 @@ export interface Ficha {
   titleFontStyle?: 'normal' | 'italic'
   bodyFontFamily?: string
   customFonts?: CustomFont[]
-  pages: [Page1Visual, Page2Graphic, Page3Technical, Page4Phases]
+  pages: [Page1Visual, Page2Graphic, Page3Technical, Page4Scaling, Page4Phases]
   createdAt: string      // ISO datetime string
   updatedAt: string      // ISO datetime string
   thumbnailData?: string // base64 PNG of page 1 at 0.25x scale
@@ -180,7 +201,7 @@ export interface Ficha {
 
 // ─── Editor State ─────────────────────────────────────────────────────────────
 
-export type PageIndex = 0 | 1 | 2 | 3
+export type PageIndex = 0 | 1 | 2 | 3 | 4
 
 export interface CanvasSelection {
   elementId: string | null

@@ -3,9 +3,9 @@ import { createDefaultFicha, createDefaultPage1, createDefaultPage2, createDefau
 
 describe('createDefaults', () => {
   describe('createDefaultFicha()', () => {
-    it('should return an object with .pages of length 4', () => {
+    it('should return an object with .pages of length 5', () => {
       const ficha = createDefaultFicha()
-      expect(ficha.pages).toHaveLength(4)
+      expect(ficha.pages).toHaveLength(5)
     })
 
     it('should have pages[0].type === "visual"', () => {
@@ -23,9 +23,14 @@ describe('createDefaults', () => {
       expect(ficha.pages[2].type).toBe('technical')
     })
 
-    it('should have pages[3].type === "phases"', () => {
+    it('should have pages[3].type === "scaling"', () => {
       const ficha = createDefaultFicha()
-      expect(ficha.pages[3].type).toBe('phases')
+      expect(ficha.pages[3].type).toBe('scaling')
+    })
+
+    it('should have pages[4].type === "phases"', () => {
+      const ficha = createDefaultFicha()
+      expect(ficha.pages[4].type).toBe('phases')
     })
 
     it('should have a non-empty string id (UUID)', () => {

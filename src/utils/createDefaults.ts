@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import type { Ficha, Page1Visual, Page2Graphic, Page3Technical, Page4Phases, ColumnStyle } from '@/types'
+import type { Ficha, Page1Visual, Page2Graphic, Page3Technical, Page4Scaling, Page4Phases, ColumnStyle, ScalingColumn } from '@/types'
 
 export function createDefaultPage1(): Page1Visual {
   return {
@@ -31,6 +31,40 @@ export function createDefaultPage3(): Page3Technical {
       { id: uuidv4(), label: 'Cadera', value: '' },
       { id: uuidv4(), label: 'Largo total', value: '' },
     ],
+  }
+}
+
+const DEFAULT_SCALING_COLUMNS: ScalingColumn[] = [
+  { id: 'medidas', label: 'MEDIDAS', kind: 'text' },
+  { id: 'letra', label: 'LETRA', kind: 'text' },
+  { id: 'xs', label: 'XS', kind: 'number' },
+  { id: 's', label: 'S', kind: 'number' },
+  { id: 'm', label: 'M', kind: 'number' },
+  { id: 'l', label: 'L', kind: 'number' },
+  { id: 'patron-completo', label: 'PATRÓN COMPLETO CONTORNOS COMPLETOS', kind: 'number' },
+  { id: 'prototipo', label: 'PROTOTIPO O FLECHAS DIBUJO', kind: 'number' },
+  { id: 'cuarto-patron', label: '1/4 PATRÓN O COMO SE PATRONA EN MESA', kind: 'number' },
+]
+
+const DEFAULT_SCALING_WIDTHS: Record<string, number> = {
+  medidas: 95,
+  letra: 38,
+  xs: 38,
+  s: 38,
+  m: 38,
+  l: 38,
+  'patron-completo': 105,
+  prototipo: 95,
+  'cuarto-patron': 105,
+}
+
+export function createDefaultPage4Scaling(): Page4Scaling {
+  return {
+    type: 'scaling',
+    elements: [],
+    columns: DEFAULT_SCALING_COLUMNS.map((c) => ({ ...c })),
+    rows: [],
+    columnWidths: { ...DEFAULT_SCALING_WIDTHS },
   }
 }
 
@@ -93,7 +127,7 @@ export function createDefaultFicha(): Ficha {
     titleFontStyle: 'normal',
     bodyFontFamily: 'Arial, sans-serif',
     customFonts: [],
-    pages: [createDefaultPage1(), createDefaultPage2(), createDefaultPage3(), createDefaultPage4()],
+    pages: [createDefaultPage1(), createDefaultPage2(), createDefaultPage3(), createDefaultPage4Scaling(), createDefaultPage4()],
     createdAt: now,
     updatedAt: now,
     thumbnailData: undefined,

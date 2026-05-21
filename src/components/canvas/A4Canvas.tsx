@@ -5,6 +5,7 @@ import type { CanvasElement, FichaPage } from '@/types'
 import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
+import Page4ScalingOverlay from '@/components/pages/Page4ScalingOverlay'
 import Page4Overlay from '@/components/pages/Page4Overlay'
 
 interface Props {
@@ -76,6 +77,12 @@ export default function A4Canvas({ pageRef }: Props) {
           <Page3Overlay
             page={page}
             ficha={currentFicha}
+            onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
+          />
+        )}
+        {page.type === 'scaling' && (
+          <Page4ScalingOverlay
+            page={page}
             onUpdatePage={(changes) => updateCurrentPage(changes as Partial<FichaPage>)}
           />
         )}

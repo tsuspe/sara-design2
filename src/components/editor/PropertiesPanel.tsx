@@ -805,8 +805,8 @@ export default function PropertiesPanel() {
     )
   }
 
-  // Page 4: just show metadata (table editing is inline on the page itself)
-  if (currentPageIndex === 3 && page?.type === 'phases') {
+  // Page 5 (phases): metadata only — table is inline
+  if (currentPageIndex === 4 && page?.type === 'phases') {
     return (
       <div className="w-72 bg-white border-l flex-shrink-0 overflow-y-auto">
         <div className="flex flex-col gap-2 p-3">
@@ -815,6 +815,23 @@ export default function PropertiesPanel() {
           </p>
           <p className="text-[10px] text-gray-400">
             Edita la tabla directamente en la página. Haz clic en los títulos de columna para personalizar su estilo. Arrastra los bordes de columna para redimensionar.
+          </p>
+        </div>
+        <FichaMetadataForm ficha={currentFicha} onUpdate={updateFichaField} />
+      </div>
+    )
+  }
+
+  // Page 4 (scaling): metadata only — table inline; canvas elements use element props panel
+  if (currentPageIndex === 3 && page?.type === 'scaling') {
+    return (
+      <div className="w-72 bg-white border-l flex-shrink-0 overflow-y-auto">
+        <div className="flex flex-col gap-2 p-3">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            Escalado
+          </p>
+          <p className="text-[10px] text-gray-400">
+            Sube la imagen de la prenda como elemento (botón Imagen) y edita la tabla abajo. Toca un título de columna para renombrarlo. Arrastra los bordes de columna para redimensionar.
           </p>
         </div>
         <FichaMetadataForm ficha={currentFicha} onUpdate={updateFichaField} />

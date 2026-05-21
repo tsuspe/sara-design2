@@ -53,7 +53,7 @@ export default function Toolbar() {
     addElement(createElement('shape', { shape, size }))
   }
 
-  const isCanvasPage = currentPageIndex !== 3
+  const isCanvasPage = currentPageIndex !== 4
 
   return (
     <div className="w-64 bg-white border-r flex-shrink-0 flex flex-col overflow-y-auto">

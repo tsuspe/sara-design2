@@ -10,6 +10,7 @@ import PageRenderer from '@/components/canvas/PageRenderer'
 import Page1Overlay from '@/components/pages/Page1Overlay'
 import Page2Overlay from '@/components/pages/Page2Overlay'
 import Page3Overlay from '@/components/pages/Page3Overlay'
+import Page4ScalingOverlay from '@/components/pages/Page4ScalingOverlay'
 import Page4Overlay from '@/components/pages/Page4Overlay'
 import { A4_WIDTH, A4_HEIGHT } from '@/components/canvas/A4Canvas'
 import type { Ficha, FichaPage } from '@/types'
@@ -48,6 +49,13 @@ function PageContent({ page, ficha }: {
           readOnly
         />
       )}
+      {page.type === 'scaling' && (
+        <Page4ScalingOverlay
+          page={page}
+          onUpdatePage={() => {}}
+          readOnly
+        />
+      )}
       {page.type === 'phases' && (
         <Page4Overlay
           page={page}
@@ -67,7 +75,7 @@ function PageContent({ page, ficha }: {
 
 export default function PreviewModal({ open, onClose }: PreviewModalProps) {
   const { currentFicha } = useFichaStore()
-  const captureRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
+  const captureRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null, null])
   const [exporting, setExporting] = useState(false)
   const [printContainer, setPrintContainer] = useState<HTMLDivElement | null>(null)
 
@@ -96,7 +104,7 @@ export default function PreviewModal({ open, onClose }: PreviewModalProps) {
 
   const capturePageImages = async (): Promise<string[]> => {
     const images: string[] = []
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < pages.length; i++) {
       const el = captureRefs.current[i]
       if (!el) continue
       const dataUrl = await toPng(el, {
